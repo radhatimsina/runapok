@@ -1,0 +1,29 @@
+import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'astro/zod';
+
+const writings = defineCollection({
+  // The file name is the id: "2016-06-18-my-poem" -> /2016/06/18/my-poem/
+  loader: glob({
+    pattern: '*.md',
+    base: './src/content/writings',
+    generateId: ({ entry }) => entry.replace(/\.md$/, ''),
+  }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    category: z.enum(['poem', 'story']).default('poem'),
+    language: z.enum(['en', 'ne']).default('en'),
+    tags: z.array(z.string()).default([]),
+    alsoPublishedAt: z.string().url().optional().or(z.literal('')),
+    legacyUrl: z.string().url().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+const pages = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/pages' }),
+  schema: z.object({ title: z.string() }),
+});
+
+export const collections = { writings, pages };

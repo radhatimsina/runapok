@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Write · Live and Let Live</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <script>
+      window.CMS_MANUAL_INIT = true;
+    </script>
+    <script src="https://unpkg.com/decap-cms@3.17.1/dist/decap-cms.js"></script>
+    <script>
+      // Log in through this same site, so it works on any Vercel address.
+      CMS.init({ config: { backend: { base_url: window.location.origin } } });
+      CMS.registerPreviewStyle(
+        'body{font-family:"Noto Serif Devanagari",Georgia,serif;font-size:19px;line-height:1.75;max-width:38rem;margin:2rem auto;padding:0 1rem;color:#26221e;background:#faf7f2}h1{line-height:1.2}img{max-width:40%;float:right;margin:0 0 1rem 1.5rem}',
+        { raw: true },
+      );
+    </script>
+  </body>
+</html>

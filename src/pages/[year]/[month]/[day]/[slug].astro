@@ -1,0 +1,205 @@
+---
+import { render } from 'astro:content';
+import Base from '../../../../layouts/Base.astro';
+import Share from '../../../../components/Share.astro';
+import Comments from '../../../../components/Comments.astro';
+import {
+  getWritings,
+  urlParts,
+  writingUrl,
+  formatDate,
+  excerpt,
+  firstImage,
+  CATEGORIES,
+  LANGUAGES,
+  AUTHOR,
+} from '../../../../lib/writings';
+
+export async function getStaticPaths() {
+  const writings = await getWritings();
+  return writings.map((entry, i) => ({
+    params: urlParts(entry.id),
+    props: { entry, newer: writings[i - 1], older: writings[i + 1] },
+  }));
+}
+
+const { entry, newer, older } = Astro.props;
+const { Content } = await render(entry);
+const { title, date, category, language, tags, alsoPublishedAt } = entry.data;
+const url = new URL(writingUrl(entry.id), Astro.site).toString();
+const description = excerpt(entry.body, 3).join(' / ');
+const image = firstImage(entry.body);
+---
+
+<Base title={title} description={description} image={image} type="article" publishedTime={date}>
+  <article class="wrap" lang={language}>
+    <header class="piece-header">
+      <p class="eyebrow" lang="en">
+        <a href={`/category/${CATEGORIES[category].path}/`}>{CATEGORIES[category].label}</a>{' · '}<a href={`/language/${LANGUAGES[language].path}/`}>{LANGUAGES[language].label}</a>
+      </p>
+      <h1>{title}</h1>
+      <p class="byline ui" lang="en">
+        {AUTHOR} · <time datetime={date.toISOString()}>{formatDate(date)}</time>
+      </p>
+    </header>
+
+    <div class:list={['piece-body', category]}>
+      <Content />
+    </div>
+
+    <footer class="piece-footer ui" lang="en">
+      {
+        alsoPublishedAt && (
+          <p class="also">
+            Also published on{' '}
+            <a href={alsoPublishedAt} rel="noopener">
+              Bhutanese Literature ↗
+            </a>
+          </p>
+        )
+      }
+      {
+        tags.length > 0 && (
+          <p class="tags">
+            {tags.map((t) => (
+              <span class="chip">{t}</span>
+            ))}
+          </p>
+        )
+      }
+      <Share url={url} title={title} />
+    </footer>
+
+    <nav class="pager ui" aria-label="More writing" lang="en">
+      {
+        older ? (
+          <a class="older" href={writingUrl(older.id)}>
+            <span class="eyebrow">← Older</span>
+            <span lang={older.data.language}>{older.data.title}</span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        newer && (
+          <a class="newer" href={writingUrl(newer.id)}>
+            <span class="eyebrow">Newer →</span>
+            <span lang={newer.data.language}>{newer.data.title}</span>
+          </a>
+        )
+      }
+    </nav>
+
+    <div lang="en">
+      <Comments postId={entry.id} />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .piece-header {
+    margin-bottom: 2.25rem;
+  }
+  .eyebrow a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .eyebrow a:hover {
+    color: var(--accent);
+  }
+  h1 {
+    font-size: clamp(1.8rem, 5vw, 2.4rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0.4rem 0 0.6rem;
+    overflow-wrap: break-word;
+  }
+  .byline {
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    margin: 0;
+  }
+  .piece-body {
+    font-size: 1.2rem;
+    overflow-wrap: break-word;
+  }
+  .piece-body :global(p) {
+    margin: 0 0 1.5em;
+  }
+  /* Poems: stanzas with generous space, lines as written. */
+  .piece-body.poem :global(p) {
+    line-height: 1.7;
+  }
+  .piece-body.story {
+    font-size: 1.15rem;
+  }
+  .piece-body.story :global(p) {
+    margin-bottom: 1.1em;
+  }
+  /* The old blog's small illustrations sit beside the verse on wide screens. */
+  .piece-body :global(p:has(> img:only-child)) {
+    float: right;
+    clear: right;
+    max-width: 40%;
+    margin: 0.35em 0 1em 1.5em;
+  }
+  .piece-body :global(img) {
+    border-radius: 3px;
+    display: block;
+  }
+  .piece-body::after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+  @media (max-width: 560px) {
+    .piece-body :global(p:has(> img:only-child)) {
+      float: none;
+      max-width: 60%;
+      margin: 0 0 1.25em;
+    }
+  }
+  .piece-footer {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .piece-footer p {
+    margin: 0;
+  }
+  .tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+  .pager a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    text-decoration: none;
+    color: var(--ink);
+    font-family: var(--font-serif);
+  }
+  .pager a span:lang(ne) {
+    font-family: var(--font-deva);
+  }
+  .pager a:hover span:last-child {
+    color: var(--accent);
+  }
+  .pager .newer {
+    text-align: right;
+    grid-column: 2;
+  }
+</style>

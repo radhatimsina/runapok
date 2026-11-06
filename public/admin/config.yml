@@ -1,0 +1,98 @@
+# Decap CMS — the writing desk at /admin/
+# Every save becomes a commit in GitHub; Vercel then rebuilds the site (about a minute).
+backend:
+  name: github
+  repo: radhatimsina/runapok
+  branch: main
+  auth_endpoint: api/auth/
+  commit_messages:
+    create: 'Add {{collection}} “{{slug}}”'
+    update: 'Update {{collection}} “{{slug}}”'
+    delete: 'Delete {{collection}} “{{slug}}”'
+    uploadMedia: 'Upload “{{path}}”'
+    deleteMedia: 'Delete “{{path}}”'
+
+site_url: https://runapok.vercel.app
+display_url: https://runapok.vercel.app
+locale: en
+
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+slug:
+  encoding: unicode # keeps Nepali titles readable in the address
+  clean_accents: false
+  sanitize_replacement: '-'
+
+collections:
+  - name: writings
+    label: Poems & Stories
+    label_singular: Poem or story
+    description: >-
+      Write a new poem or story. The web address is made from today’s date and the title,
+      e.g. /2026/11/06/my-poem/, and does not change later.
+    folder: src/content/writings
+    create: true
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    summary: '{{title}} — {{date | date("YYYY-MM-DD")}}'
+    sortable_fields: ['date', 'title']
+    view_filters:
+      - { label: Poems, field: category, pattern: poem }
+      - { label: Stories, field: category, pattern: story }
+      - { label: English, field: language, pattern: en }
+      - { label: Nepali, field: language, pattern: ne }
+    view_groups:
+      - { label: Year, field: date, pattern: '\d{4}' }
+    fields:
+      - { label: Title, name: title, widget: string }
+      - label: Publish date
+        name: date
+        widget: datetime
+        format: 'YYYY-MM-DDTHH:mm:ss[Z]'
+        picker_utc: true
+      - label: Type
+        name: category
+        widget: select
+        default: poem
+        options:
+          - { label: Poem, value: poem }
+          - { label: Story, value: story }
+      - label: Language
+        name: language
+        widget: select
+        default: en
+        options:
+          - { label: English, value: en }
+          - { label: Nepali (नेपाली), value: ne }
+      - label: Text
+        name: body
+        widget: markdown
+        modes: [raw, rich_text]
+        hint: >-
+          Type each line of the poem on its own line. Leave an empty line between stanzas.
+      - label: Also published on Bhutanese Literature
+        name: alsoPublishedAt
+        widget: string
+        required: false
+        hint: Paste the link to the same piece on bhutaneseliterature.com, if it is there too.
+        pattern: ['^(https?://.+)?$', 'Must be a full link starting with https://']
+      - label: Tags
+        name: tags
+        widget: list
+        required: false
+        hint: Optional, separated by commas.
+      - label: Draft (hide from the site)
+        name: draft
+        widget: boolean
+        default: false
+        required: false
+
+  - name: pages
+    label: Pages
+    files:
+      - name: about
+        label: About Me
+        file: src/content/pages/about.md
+        fields:
+          - { label: Title, name: title, widget: string }
+          - { label: Text, name: body, widget: markdown, modes: [raw, rich_text] }

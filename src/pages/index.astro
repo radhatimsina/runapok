@@ -1,0 +1,159 @@
+---
+import Base from '../layouts/Base.astro';
+import WritingList from '../components/WritingList.astro';
+import { getWritings, writingUrl, formatDate, excerpt, AUTHOR, SITE_TAGLINE, LANGUAGES } from '../lib/writings';
+
+const writings = await getWritings();
+const latest = writings[0];
+const counts = {
+  all: writings.length,
+  en: writings.filter((w) => w.data.language === 'en').length,
+  ne: writings.filter((w) => w.data.language === 'ne').length,
+  poem: writings.filter((w) => w.data.category === 'poem').length,
+  story: writings.filter((w) => w.data.category === 'story').length,
+};
+---
+
+<Base>
+  <div class="wrap">
+    <section class="intro">
+      <p class="tagline">“{SITE_TAGLINE}”</p>
+      <p class="byline ui">Poems and stories by {AUTHOR}, in English and नेपाली, since 2009.</p>
+    </section>
+
+    {
+      latest && (
+        <a class="latest" href={writingUrl(latest.id)} lang={latest.data.language}>
+          <span class="eyebrow">Latest · {formatDate(latest.data.date)}</span>
+          <span class="latest-title">{latest.data.title}</span>
+          <span class="latest-lines">
+            {excerpt(latest.body, 4).map((line) => (
+              <span>{line}</span>
+            ))}
+          </span>
+          <span class="read ui" lang="en">Read the full {latest.data.category} →</span>
+        </a>
+      )
+    }
+
+    <div class="filters ui" role="group" aria-label="Filter the list" hidden>
+      <button type="button" data-filter="all" aria-pressed="true">All <span>{counts.all}</span></button>
+      <button type="button" data-filter="language:en" aria-pressed="false">
+        {LANGUAGES.en.native} <span>{counts.en}</span>
+      </button>
+      <button type="button" data-filter="language:ne" aria-pressed="false" lang="ne">
+        {LANGUAGES.ne.native} <span>{counts.ne}</span>
+      </button>
+      <button type="button" data-filter="category:poem" aria-pressed="false">Poems <span>{counts.poem}</span></button>
+      <button type="button" data-filter="category:story" aria-pressed="false">Stories <span>{counts.story}</span></button>
+    </div>
+
+    <WritingList items={writings} />
+  </div>
+</Base>
+
+<script>
+  const filters = document.querySelector<HTMLElement>('.filters');
+  if (filters) {
+    filters.hidden = false;
+    const buttons = [...filters.querySelectorAll<HTMLButtonElement>('button')];
+    const apply = (value: string) => {
+      const [key, wanted] = value.split(':');
+      for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.filter === value));
+      for (const li of document.querySelectorAll<HTMLElement>('.writing-list li')) {
+        li.hidden = value !== 'all' && li.dataset[key] !== wanted;
+      }
+      for (const year of document.querySelectorAll<HTMLElement>('[data-year]')) {
+        year.hidden = !year.querySelector('li:not([hidden])');
+      }
+    };
+    for (const b of buttons) b.addEventListener('click', () => apply(b.dataset.filter!));
+  }
+</script>
+
+<style>
+  .intro {
+    margin-bottom: 2rem;
+  }
+  .tagline {
+    font-size: 1.45rem;
+    font-style: italic;
+    line-height: 1.4;
+    margin: 0;
+    color: var(--ink);
+  }
+  .byline {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    margin: 0.75rem 0 0;
+  }
+  .latest {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1.5rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    color: var(--ink);
+    text-decoration: none;
+    margin-bottom: 2rem;
+  }
+  .latest:hover .read {
+    text-decoration: underline;
+  }
+  .latest-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .latest-lines {
+    display: flex;
+    flex-direction: column;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .latest-lines:lang(ne) {
+    font-style: normal;
+  }
+  .read {
+    color: var(--accent);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .filters[hidden] {
+    display: none;
+  }
+  .filters button {
+    font: inherit;
+    font-size: 0.85rem;
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--ink-soft);
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    cursor: pointer;
+  }
+  .filters button[lang='ne'] {
+    font-family: var(--font-deva);
+  }
+  .filters button span {
+    color: var(--ink-faint);
+    margin-left: 0.2rem;
+  }
+  .filters button[aria-pressed='true'] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .filters button[aria-pressed='true'] span {
+    color: inherit;
+    opacity: 0.7;
+  }
+</style>

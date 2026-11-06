@@ -1,0 +1,48 @@
+---
+import Base from '../../layouts/Base.astro';
+import WritingList from '../../components/WritingList.astro';
+import { getWritings, LANGUAGES } from '../../lib/writings';
+
+export async function getStaticPaths() {
+  const writings = await getWritings();
+  return (Object.keys(LANGUAGES) as (keyof typeof LANGUAGES)[]).map((key) => ({
+    params: { language: LANGUAGES[key].path },
+    props: { lang: key, items: writings.filter((w) => w.data.language === key) },
+  }));
+}
+
+const { lang, items } = Astro.props;
+const info = LANGUAGES[lang];
+const title = lang === 'ne' ? 'नेपाली रचनाहरू' : 'Writing in English';
+---
+
+<Base title={title} description={`${info.label} poems and stories by Rup Pokharel.`}>
+  <div class="wrap">
+    <h1 lang={lang}>{title}</h1>
+    <p class="count ui">
+      {items.length} pieces in {info.label} ·
+      {
+        lang === 'ne' ? (
+          <a href={`/language/${LANGUAGES.en.path}/`}>Read in English</a>
+        ) : (
+          <a href={`/language/${LANGUAGES.ne.path}/`} lang="ne">
+            नेपालीमा पढ्नुहोस्
+          </a>
+        )
+      }
+    </p>
+    <WritingList items={items} />
+  </div>
+</Base>
+
+<style>
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+  }
+  .count {
+    color: var(--ink-faint);
+    font-size: 0.85rem;
+    margin: 0.25rem 0 0;
+  }
+</style>

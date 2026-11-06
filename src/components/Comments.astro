@@ -1,0 +1,366 @@
+---
+interface Props {
+  postId: string;
+}
+const { postId } = Astro.props;
+---
+
+<section class="comments ui" id="comments" data-post={postId} aria-labelledby="comments-heading">
+  <h2 id="comments-heading">Comments</h2>
+  <div class="comment-list" aria-live="polite">
+    <p class="status">Loading comments…</p>
+  </div>
+
+  <form class="comment-form" novalidate>
+    <h3 class="form-title">Leave a comment</h3>
+    <p class="replying" hidden>
+      Replying to <strong></strong> · <button type="button" class="link cancel-reply">cancel</button>
+    </p>
+    <input type="hidden" name="parentId" value="" />
+    <input type="hidden" name="startedAt" value="" />
+    <div class="hp" aria-hidden="true">
+      <label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+    </div>
+    <label>
+      <span>Name <span class="req">*</span></span>
+      <input type="text" name="name" required maxlength="80" autocomplete="name" />
+    </label>
+    <label>
+      <span>Website <span class="opt">(optional)</span></span>
+      <input type="url" name="url" maxlength="200" placeholder="https://" autocomplete="url" />
+    </label>
+    <label>
+      <span>Comment <span class="req">*</span></span>
+      <textarea name="body" required rows="5" maxlength="5000"></textarea>
+    </label>
+    <details class="author-box">
+      <summary>Are you the author?</summary>
+      <label>
+        Author passcode
+        <input type="password" name="passcode" autocomplete="current-password" />
+      </label>
+    </details>
+    <div class="actions">
+      <button class="button" type="submit">Post comment</button>
+      <p class="form-status" role="status"></p>
+    </div>
+    <p class="note">No email needed. Please be kind — comments are public.</p>
+  </form>
+</section>
+
+<script>
+  type Comment = {
+    id: number;
+    parentId: number | null;
+    authorName: string;
+    authorUrl: string | null;
+    body: string;
+    isAuthor: boolean;
+    createdAt: string;
+  };
+
+  const section = document.querySelector<HTMLElement>('.comments');
+  if (section) {
+    const postId = section.dataset.post!;
+    const list = section.querySelector<HTMLElement>('.comment-list')!;
+    const form = section.querySelector<HTMLFormElement>('.comment-form')!;
+    const status = form.querySelector<HTMLElement>('.form-status')!;
+    const replying = form.querySelector<HTMLElement>('.replying')!;
+    const parentInput = form.elements.namedItem('parentId') as HTMLInputElement;
+    (form.elements.namedItem('startedAt') as HTMLInputElement).value = String(Date.now());
+
+    const fmt = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    const el = <K extends keyof HTMLElementTagNameMap>(tag: K, cls?: string, text?: string) => {
+      const node = document.createElement(tag);
+      if (cls) node.className = cls;
+      if (text) node.textContent = text;
+      return node;
+    };
+
+    const renderOne = (c: Comment, replies: Comment[]) => {
+      const li = el('li', c.isAuthor ? 'comment by-author' : 'comment');
+      li.id = `comment-${c.id}`;
+      const head = el('div', 'comment-head');
+      const avatar = el('span', 'avatar', c.authorName.trim().charAt(0).toUpperCase() || '?');
+      avatar.setAttribute('aria-hidden', 'true');
+      head.append(avatar);
+      const who = el('span', 'who');
+      if (c.authorUrl) {
+        const a = el('a', undefined, c.authorName);
+        a.href = c.authorUrl;
+        a.rel = 'nofollow ugc noopener';
+        who.append(a);
+      } else {
+        who.textContent = c.authorName;
+      }
+      head.append(who);
+      if (c.isAuthor) head.append(el('span', 'chip', 'Author'));
+      const time = el('time', 'when', fmt.format(new Date(c.createdAt)));
+      time.setAttribute('datetime', c.createdAt);
+      head.append(time);
+      li.append(head);
+
+      const body = el('div', 'comment-body');
+      for (const para of c.body.split(/\n{2,}/)) body.append(el('p', undefined, para));
+      if (/[ऀ-ॿ]/.test(c.body)) body.lang = 'ne';
+      li.append(body);
+
+      const reply = el('button', 'link reply', 'Reply');
+      reply.type = 'button';
+      reply.addEventListener('click', () => {
+        parentInput.value = String(c.id);
+        replying.hidden = false;
+        replying.querySelector('strong')!.textContent = c.authorName;
+        form.querySelector<HTMLInputElement>('[name="name"]')!.focus();
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      li.append(reply);
+
+      if (replies.length) {
+        const ol = el('ol', 'replies');
+        for (const r of replies) ol.append(renderOne(r, []));
+        li.append(ol);
+      }
+      return li;
+    };
+
+    const render = (comments: Comment[]) => {
+      list.replaceChildren();
+      if (!comments.length) {
+        list.append(el('p', 'status', 'No comments yet. Be the first to share your thoughts.'));
+        return;
+      }
+      // Replies are shown one level deep, under the top-level comment they belong to.
+      const byId = new Map(comments.map((c) => [c.id, c]));
+      const rootOf = (c: Comment): Comment => {
+        let cur = c;
+        while (cur.parentId && byId.has(cur.parentId)) cur = byId.get(cur.parentId)!;
+        return cur;
+      };
+      const roots = comments.filter((c) => !c.parentId || !byId.has(c.parentId));
+      const ol = el('ol', 'thread');
+      for (const root of roots) {
+        const replies = comments.filter((c) => c !== root && rootOf(c) === root);
+        ol.append(renderOne(root, replies));
+      }
+      const count = el('p', 'count', `${comments.length} ${comments.length === 1 ? 'comment' : 'comments'}`);
+      list.append(count, ol);
+    };
+
+    const load = async () => {
+      try {
+        const res = await fetch(`/api/comments/?post=${encodeURIComponent(postId)}`);
+        if (!res.ok) throw new Error(String(res.status));
+        const data = await res.json();
+        render(data.comments);
+        if (location.hash.startsWith('#comment-')) document.querySelector(location.hash)?.scrollIntoView();
+      } catch {
+        list.replaceChildren(el('p', 'status', 'Comments could not be loaded right now. Please try again later.'));
+      }
+    };
+
+    form.querySelector('.cancel-reply')!.addEventListener('click', () => {
+      parentInput.value = '';
+      replying.hidden = true;
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      const data = Object.fromEntries(new FormData(form)) as Record<string, string>;
+      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      button.disabled = true;
+      status.textContent = 'Posting…';
+      try {
+        const res = await fetch('/api/comments/', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ ...data, postId }),
+        });
+        const result = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(result.error ?? 'Something went wrong. Please try again.');
+        form.querySelector<HTMLTextAreaElement>('textarea')!.value = '';
+        parentInput.value = '';
+        replying.hidden = true;
+        status.textContent = result.pending
+          ? 'Thank you! Your comment will appear after it is approved.'
+          : 'Thank you! Your comment is posted.';
+        await load();
+      } catch (err) {
+        status.textContent = (err as Error).message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    load();
+  }
+</script>
+
+<style>
+  .comments {
+    margin-top: 3.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.95rem;
+  }
+  h2 {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    margin: 0 0 1rem;
+  }
+  .comments :global(.status),
+  .comments :global(.count) {
+    color: var(--ink-faint);
+    font-size: 0.85rem;
+  }
+  .comments :global(ol) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .comments :global(.comment) {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .comments :global(.replies) {
+    margin: 0.75rem 0 0 1.25rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--rule);
+  }
+  .comments :global(.replies .comment) {
+    border-bottom: none;
+    padding: 0.5rem 0;
+  }
+  .comments :global(.comment-head) {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .comments :global(.avatar) {
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .comments :global(.by-author > .comment-head .avatar) {
+    background: var(--accent);
+    color: var(--paper);
+  }
+  .comments :global(.who) {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .comments :global(.when) {
+    color: var(--ink-faint);
+    font-size: 0.8rem;
+  }
+  .comments :global(.comment-body) {
+    font-family: var(--font-serif);
+    font-size: 1.02rem;
+    margin: 0.4rem 0 0 2.4rem;
+    overflow-wrap: anywhere;
+  }
+  .comments :global(.comment-body:lang(ne)) {
+    font-family: var(--font-deva);
+  }
+  .comments :global(.comment-body p) {
+    margin: 0 0 0.5rem;
+    white-space: pre-line;
+  }
+  .comments :global(.link) {
+    font: inherit;
+    font-size: 0.8rem;
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--accent);
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  .comments :global(.reply) {
+    margin-left: 2.4rem;
+  }
+  .comment-form {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 1.25rem;
+  }
+  .form-title {
+    margin: 0;
+    font-size: 1rem;
+  }
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  input,
+  textarea {
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 0.55rem 0.65rem;
+    width: 100%;
+  }
+  textarea {
+    font-family: var(--font-serif);
+    resize: vertical;
+  }
+  .req {
+    color: var(--accent);
+  }
+  .opt {
+    color: var(--ink-faint);
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+  }
+  .author-box summary {
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    cursor: pointer;
+  }
+  .author-box label {
+    margin-top: 0.5rem;
+  }
+  .actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .form-status {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .note {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+  }
+  .replying {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+</style>

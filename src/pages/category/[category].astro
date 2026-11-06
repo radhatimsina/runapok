@@ -1,0 +1,36 @@
+---
+import Base from '../../layouts/Base.astro';
+import WritingList from '../../components/WritingList.astro';
+import { getWritings, CATEGORIES } from '../../lib/writings';
+
+// Same addresses as the old WordPress category pages: /category/poems/, /category/stories/
+export async function getStaticPaths() {
+  const writings = await getWritings();
+  return (Object.keys(CATEGORIES) as (keyof typeof CATEGORIES)[]).map((key) => ({
+    params: { category: CATEGORIES[key].path },
+    props: { label: CATEGORIES[key].plural, items: writings.filter((w) => w.data.category === key) },
+  }));
+}
+
+const { label, items } = Astro.props;
+---
+
+<Base title={label} description={`${label} by Rup Pokharel.`}>
+  <div class="wrap">
+    <h1>{label}</h1>
+    <p class="count ui">{items.length} {items.length === 1 ? 'piece' : 'pieces'}</p>
+    <WritingList items={items} />
+  </div>
+</Base>
+
+<style>
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+  }
+  .count {
+    color: var(--ink-faint);
+    font-size: 0.85rem;
+    margin: 0.25rem 0 0;
+  }
+</style>
