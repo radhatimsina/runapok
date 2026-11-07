@@ -23,8 +23,21 @@ const writings = defineCollection({
 });
 
 const pages = defineCollection({
-  loader: glob({ pattern: '*.md', base: './src/content/pages' }),
-  schema: z.object({ title: z.string() }),
+  // The file name is the address: "books.md" -> /books/
+  loader: glob({
+    pattern: '*.md',
+    base: './src/content/pages',
+    generateId: ({ entry }) => entry.replace(/\.md$/, ''),
+  }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    image: z.string().optional().or(z.literal('')),
+    showInMenu: z.boolean().default(false),
+    menuOrder: z.number().default(50),
+    comments: z.boolean().default(false),
+    draft: z.boolean().default(false),
+  }),
 });
 
 export const collections = { writings, pages };

@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { SITE_TITLE, SITE_TAGLINE, AUTHOR, CATEGORIES, LANGUAGES } from '../lib/writings';
+import { SITE_TITLE, SITE_TAGLINE, AUTHOR, CATEGORIES, LANGUAGES, getMenuPages, pageUrl } from '../lib/writings';
 
 interface Props {
   title?: string;
@@ -30,7 +30,12 @@ const navItems = [
   { href: `/category/${CATEGORIES.poem.path}/`, label: 'Poems' },
   { href: `/category/${CATEGORIES.story.path}/`, label: 'Stories' },
   { href: `/language/${LANGUAGES.ne.path}/`, label: 'नेपाली', lang: 'ne' },
-  { href: '/about/', label: 'About' },
+  // Pages the author marked "Show in the top menu" (About, Books, ...)
+  ...(await getMenuPages()).map((p) => ({
+    href: pageUrl(p.id),
+    label: p.id === 'about' ? 'About' : p.data.title,
+    lang: /[\u0900-\u097F]/.test(p.data.title) ? 'ne' : undefined,
+  })),
 ];
 ---
 
@@ -96,7 +101,7 @@ const navItems = [
       </div>
       <nav class="wrap-wide site-nav ui" aria-label="Main">
         {
-          navItems.map((item) => (
+          navItems.map((item: { href: string; label: string; lang?: string }) => (
             <a
               href={item.href}
               lang={item.lang}

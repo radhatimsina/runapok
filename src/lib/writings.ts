@@ -67,3 +67,31 @@ export function groupByYear(items: Writing[]) {
 export function thumbnail(entry: Writing) {
   return entry.data.image || firstImage(entry.body);
 }
+
+/** Addresses already used by the site; a page can't use these names. */
+const RESERVED_PAGE_NAMES = new Set([
+  'admin', 'api', 'category', 'language', 'images', 'feed', 'comments', 'author',
+  'tag', 'page', 'wp-content', 'rss.xml', '404', '_astro', 'favicon.ico',
+]);
+
+/** Standalone pages written by the author (About, Books, Contact, ...). */
+export async function getPages() {
+  const pages = await getCollection('pages', ({ data }) => import.meta.env.DEV || !data.draft);
+  for (const page of pages) {
+    if (RESERVED_PAGE_NAMES.has(page.id) || /^\d{4}$/.test(page.id)) {
+      throw new Error(`The page "${page.id}" uses an address the site already needs. Rename src/content/pages/${page.id}.md.`);
+    }
+  }
+  return pages;
+}
+
+export function pageUrl(id: string) {
+  return `/${encodeURIComponent(id)}/`;
+}
+
+/** Pages marked "Show in the top menu", in menu order. */
+export async function getMenuPages() {
+  return (await getPages())
+    .filter((p) => p.data.showInMenu)
+    .sort((a, b) => a.data.menuOrder - b.data.menuOrder || a.data.title.localeCompare(b.data.title));
+}

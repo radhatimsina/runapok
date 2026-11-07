@@ -96,10 +96,51 @@ collections:
 
   - name: pages
     label: Pages
-    files:
-      - name: about
-        label: About Me
-        file: src/content/pages/about.md
-        fields:
-          - { label: Title, name: title, widget: string }
-          - { label: Text, name: body, widget: markdown, modes: [raw, rich_text] }
+    label_singular: Page
+    description: >-
+      Standalone pages such as About, Books or Contact. The web address comes from the
+      title when the page is first saved (e.g. "My Books" -> /my-books/) and does not change later.
+    folder: src/content/pages
+    create: true
+    delete: true
+    slug: '{{slug}}'
+    summary: '{{title}}{{showInMenu | ternary(" · in menu", "")}}'
+    sortable_fields: ['title', 'menuOrder']
+    fields:
+      - { label: Title, name: title, widget: string }
+      - label: Show in the top menu
+        name: showInMenu
+        widget: boolean
+        default: true
+        required: false
+      - label: Menu position
+        name: menuOrder
+        widget: number
+        value_type: int
+        default: 50
+        required: false
+        hint: Smaller numbers come first. About is 10.
+      - label: Allow comments
+        name: comments
+        widget: boolean
+        default: false
+        required: false
+      - label: Header picture
+        name: image
+        widget: image
+        required: false
+      - label: Short description
+        name: description
+        widget: string
+        required: false
+        hint: Optional. Shown when the page is shared on Facebook or WhatsApp.
+      - label: Text
+        name: body
+        widget: markdown
+        modes: [rich_text, raw]
+        hint: Use the toolbar for headings, links, lists and pictures.
+      - label: Draft (hide from the site)
+        name: draft
+        widget: boolean
+        default: false
+        required: false

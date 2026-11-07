@@ -1,5 +1,8 @@
 ---
 title: About Me
+showInMenu: true
+menuOrder: 10
+comments: true
 ---
 
 

@@ -28,7 +28,10 @@ const json = (data: unknown, status = 200, headers: Record<string, string> = {})
 
 let knownPosts: Set<string> | undefined;
 async function postExists(id: string) {
-  knownPosts ??= new Set(['about', ...(await getCollection('writings')).map((w) => w.id)]);
+  knownPosts ??= new Set([
+    ...(await getCollection('writings')).map((w) => w.id),
+    ...(await getCollection('pages', ({ data }) => data.comments)).map((p) => p.id),
+  ]);
   return knownPosts.has(id);
 }
 

@@ -80,6 +80,19 @@ Redeploy after adding them.
 
 Tick **Draft** to save a piece without showing it on the site.
 
+## Adding a page (About, Books, Contact…)
+
+1. In `/admin/`, open **Pages** and choose **New Page**.
+2. Give it a title. The address comes from the title the first time it's saved
+   (for example "My Books" becomes `/my-books/`).
+3. Tick **Show in the top menu** to add it to the menu, and use **Menu position**
+   to order it (About is 10, smaller numbers come first).
+4. Optionally add a header picture, turn on comments, or tick **Draft** to keep
+   it hidden while you work on it. Click **Publish**.
+
+A few names are taken by the site itself and can't be used for pages:
+admin, api, category, language, images, feed, tag, author and plain years like 2016.
+
 ## Comments
 
 - Visitors only need a name. Email is not collected.

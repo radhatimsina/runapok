@@ -1,0 +1,62 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Comments from '../components/Comments.astro';
+import { getPages, excerpt } from '../lib/writings';
+
+// Every file in src/content/pages becomes a page: about.md -> /about/, books.md -> /books/
+export async function getStaticPaths() {
+  return (await getPages()).map((page) => ({ params: { page: page.id }, props: { page } }));
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+const { title, description, image, comments } = page.data;
+const lang = /[ऀ-ॿ]/.test(title + (page.body ?? '')) ? 'ne' : 'en';
+---
+
+<Base title={title} description={description || excerpt(page.body, 2).join(' ')} image={image || undefined}>
+  <article class="wrap">
+    <h1 lang={lang}>{title}</h1>
+    {image && <img class="hero-image" src={image} alt="" />}
+    <div class="page-body" lang={lang}>
+      <Content />
+    </div>
+    {comments && <Comments postId={page.id} />}
+  </article>
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(2.2rem, 6vw, 3rem);
+    line-height: 1.15;
+    margin: 0 0 1.5rem;
+  }
+  .hero-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 10px;
+    margin: 0 0 2rem;
+  }
+  .page-body {
+    font-size: 1.2rem;
+  }
+  .page-body :global(p:has(> img:only-child)) {
+    float: left;
+    max-width: 9rem;
+    margin: 0.3rem 1.5rem 1rem 0;
+  }
+  .page-body :global(img) {
+    border-radius: 4px;
+  }
+  .page-body :global(h2) {
+    margin-top: 2.5rem;
+  }
+  .page-body::after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+</style>
