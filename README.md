@@ -44,8 +44,9 @@ Poems and stories by **Rup Pokharel**, moved from the old WordPress blog
    ```bash
    node --env-file=.env.local scripts/db-setup.mjs
    ```
-   or paste `db/schema.sql` into the Neon SQL editor and then run the script
-   above to load the old comments. The script is safe to run more than once.
+   or, without a computer setup, paste `db/schema.sql` and then
+   `db/legacy-comments.sql` into the Neon SQL editor and run them. Both are
+   safe to run more than once.
 
 ### 3. Sign-in for the writing desk (Decap CMS)
 
