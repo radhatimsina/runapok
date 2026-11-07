@@ -64,6 +64,13 @@ collections:
         options:
           - { label: English, value: en }
           - { label: Nepali (नेपाली), value: ne }
+      - label: Thumbnail image
+        name: image
+        widget: image
+        required: false
+        hint: >-
+          Optional. Shown on the home page card and when the poem is shared. If left empty,
+          the first picture in the text is used, or a card with the poem's first line.
       - label: Text
         name: body
         widget: markdown

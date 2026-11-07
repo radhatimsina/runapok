@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import WritingList from '../../components/WritingList.astro';
+import WritingGrid from '../../components/WritingGrid.astro';
 import { getWritings, CATEGORIES } from '../../lib/writings';
 
 // Same addresses as the old WordPress category pages: /category/poems/, /category/stories/
@@ -16,21 +16,22 @@ const { label, items } = Astro.props;
 ---
 
 <Base title={label} description={`${label} by Rup Pokharel.`}>
-  <div class="wrap">
+  <div class="wrap-wide">
     <h1>{label}</h1>
     <p class="count ui">{items.length} {items.length === 1 ? 'piece' : 'pieces'}</p>
-    <WritingList items={items} />
+    <WritingGrid items={items} />
   </div>
 </Base>
 
 <style>
   h1 {
-    margin: 0;
-    font-size: 2rem;
+    margin: 0.5rem 0 0;
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    line-height: 1.15;
   }
   .count {
     color: var(--ink-faint);
-    font-size: 0.85rem;
+    font-size: 1rem;
     margin: 0.25rem 0 0;
   }
 </style>

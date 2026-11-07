@@ -74,7 +74,7 @@ const navItems = [
   <body>
     <a class="skip ui" href="#main">Skip to content</a>
     <header class="site-header">
-      <div class="wrap header-inner">
+      <div class="wrap-wide header-inner">
         <a class="brand" href="/">
           <span class="brand-title">{SITE_TITLE}</span>
           <span class="brand-author ui">{AUTHOR}</span>
@@ -88,7 +88,7 @@ const navItems = [
           >
         </button>
       </div>
-      <nav class="wrap site-nav ui" aria-label="Main">
+      <nav class="wrap-wide site-nav ui" aria-label="Main">
         {
           navItems.map((item) => (
             <a
@@ -108,7 +108,7 @@ const navItems = [
     </main>
 
     <footer class="site-footer ui">
-      <div class="wrap">
+      <div class="wrap-wide">
         <p>© {new Date().getFullYear()} {AUTHOR}. All poems and stories are the author’s own.</p>
         <p>
           <a href="/rss.xml">RSS feed</a> · <a href="/about/">About</a> ·
@@ -162,13 +162,13 @@ const navItems = [
     flex-direction: column;
   }
   .brand-title {
-    font-size: 1.6rem;
+    font-size: clamp(1.8rem, 4vw, 2.3rem);
     font-weight: 600;
     letter-spacing: -0.01em;
     line-height: 1.2;
   }
   .brand-author {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ink-faint);
@@ -178,8 +178,8 @@ const navItems = [
     background: none;
     border: 1px solid var(--rule);
     color: var(--ink-soft);
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 2.6rem;
+    height: 2.6rem;
     border-radius: 999px;
     display: grid;
     place-items: center;
@@ -190,9 +190,9 @@ const navItems = [
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem 1.25rem;
-    padding-top: 1rem;
-    padding-bottom: 0.9rem;
-    font-size: 0.9rem;
+    padding-top: 1.1rem;
+    padding-bottom: 1rem;
+    font-size: 1.05rem;
   }
   .site-nav a {
     color: var(--ink-soft);
@@ -208,13 +208,13 @@ const navItems = [
     border-bottom-color: var(--accent);
   }
   main {
-    padding: 2.5rem 0 4rem;
+    padding: 2.5rem 0 5rem;
   }
   .site-footer {
     border-top: 1px solid var(--rule);
     color: var(--ink-faint);
-    font-size: 0.8rem;
-    padding: 1.5rem 0 2.5rem;
+    font-size: 0.9rem;
+    padding: 2rem 0 3rem;
   }
   .site-footer p {
     margin: 0.25rem 0;

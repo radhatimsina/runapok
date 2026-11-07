@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import WritingList from '../../components/WritingList.astro';
+import WritingGrid from '../../components/WritingGrid.astro';
 import { getWritings, LANGUAGES } from '../../lib/writings';
 
 export async function getStaticPaths() {
@@ -17,7 +17,7 @@ const title = lang === 'ne' ? 'नेपाली रचनाहरू' : 'Writ
 ---
 
 <Base title={title} description={`${info.label} poems and stories by Rup Pokharel.`}>
-  <div class="wrap">
+  <div class="wrap-wide">
     <h1 lang={lang}>{title}</h1>
     <p class="count ui">
       {items.length} pieces in {info.label} ·
@@ -31,18 +31,19 @@ const title = lang === 'ne' ? 'नेपाली रचनाहरू' : 'Writ
         )
       }
     </p>
-    <WritingList items={items} />
+    <WritingGrid items={items} />
   </div>
 </Base>
 
 <style>
   h1 {
-    margin: 0;
-    font-size: 2rem;
+    margin: 0.5rem 0 0;
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    line-height: 1.15;
   }
   .count {
     color: var(--ink-faint);
-    font-size: 0.85rem;
+    font-size: 1rem;
     margin: 0.25rem 0 0;
   }
 </style>

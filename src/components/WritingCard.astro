@@ -1,0 +1,220 @@
+---
+import { writingUrl, formatDate, excerpt, thumbnail, CATEGORIES, LANGUAGES, type Writing } from '../lib/writings';
+
+interface Props {
+  entry: Writing;
+  featured?: boolean;
+}
+const { entry, featured = false } = Astro.props;
+const { title, date, category, language } = entry.data;
+const image = thumbnail(entry);
+const lines = excerpt(entry.body, featured ? 4 : 2);
+// Pieces without a picture get a text card in one of a few calm colours.
+const tones = ['clay', 'moss', 'ink', 'sand'];
+const tone = tones[[...entry.id].reduce((n, c) => n + c.charCodeAt(0), 0) % tones.length];
+---
+
+<article
+  class:list={['card', { featured }]}
+  data-language={language}
+  data-category={category}
+>
+  <a class="thumb" href={writingUrl(entry.id)} tabindex="-1" aria-hidden="true">
+    {
+      image ? (
+        <img src={image} alt="" loading={featured ? 'eager' : 'lazy'} decoding="async" />
+      ) : (
+        <span class:list={['text-thumb', tone]} lang={language}>
+          <span class="quote">“</span>
+          <span class="first-line">{lines[0]}</span>
+        </span>
+      )
+    }
+  </a>
+  <div class="card-body">
+    <p class="card-meta ui">
+      <span class="chip">{CATEGORIES[category].label}</span>
+      <span class="chip lang" lang={language}>{LANGUAGES[language].native}</span>
+      <time datetime={date.toISOString()}>{formatDate(date)}</time>
+    </p>
+    <h3 class="card-title" lang={language}>
+      <a href={writingUrl(entry.id)}>{title}</a>
+    </h3>
+    <p class="card-excerpt" lang={language}>
+      {lines.map((l) => <span>{l}</span>)}
+    </p>
+    {featured && <a class="read ui" href={writingUrl(entry.id)}>Read the full {CATEGORIES[category].label.toLowerCase()} →</a>}
+  </div>
+</article>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px -14px rgb(0 0 0 / 0.35);
+  }
+  .card[hidden] {
+    display: none;
+  }
+  .thumb {
+    display: block;
+    text-decoration: none;
+    aspect-ratio: 16 / 10;
+    background: var(--accent-soft);
+    overflow: hidden;
+  }
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .text-thumb {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.25rem 1.5rem;
+    color: #fbf6ee;
+    font-style: italic;
+    font-size: 1.3rem;
+    line-height: 1.35;
+  }
+  .text-thumb:lang(ne) {
+    font-style: normal;
+  }
+  .text-thumb .quote {
+    font-size: 3.2rem;
+    line-height: 0.6;
+    opacity: 0.55;
+    font-style: normal;
+  }
+  .first-line {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .clay {
+    background: linear-gradient(135deg, #9a3b26, #6e2a1c);
+  }
+  .moss {
+    background: linear-gradient(135deg, #4f6b4a, #34482f);
+  }
+  .ink {
+    background: linear-gradient(135deg, #3c4a63, #262f42);
+  }
+  .sand {
+    background: linear-gradient(135deg, #a77b3f, #7a5627);
+  }
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.1rem 1.25rem 1.35rem;
+    flex: 1;
+  }
+  .card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.5rem;
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+  }
+  .chip.lang {
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+  }
+  .chip.lang:lang(ne) {
+    font-family: var(--font-deva);
+  }
+  .card-meta time {
+    margin-left: auto;
+  }
+  .card-title {
+    margin: 0;
+    font-size: 1.35rem;
+    line-height: 1.25;
+    font-weight: 600;
+  }
+  .card-title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  /* The whole card is clickable through the title link. */
+  .card-title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .card:hover .card-title a {
+    color: var(--accent);
+  }
+  .card-excerpt {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    color: var(--ink-soft);
+    font-size: 1.02rem;
+    line-height: 1.55;
+  }
+  .card-excerpt span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .read {
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+    padding-top: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  /* Featured (latest) piece: picture beside the text on wide screens. */
+  .featured {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .featured .card-title {
+    font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+  }
+  .featured .card-excerpt {
+    font-size: 1.15rem;
+    font-style: italic;
+  }
+  .featured .card-excerpt:lang(ne) {
+    font-style: normal;
+  }
+  .featured .card-body {
+    padding: 1.5rem 1.75rem 1.75rem;
+    gap: 0.75rem;
+  }
+  @media (min-width: 760px) {
+    .featured {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    }
+    .featured .thumb {
+      aspect-ratio: auto;
+      min-height: 100%;
+    }
+    .featured .card-body {
+      padding: 2.25rem 2.5rem;
+      justify-content: center;
+    }
+  }
+</style>

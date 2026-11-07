@@ -1,0 +1,60 @@
+---
+import WritingCard from './WritingCard.astro';
+import { groupByYear, type Writing } from '../lib/writings';
+
+interface Props {
+  items: Writing[];
+}
+const { items } = Astro.props;
+const groups = groupByYear(items);
+---
+
+<div class="writing-grid">
+  {
+    groups.map(([year, entries]) => (
+      <section class="year" id={`year-${year}`} data-year>
+        <h2 class="year-heading">
+          <span>{year}</span>
+          <span class="year-count ui">
+            {entries.length} {entries.length === 1 ? 'piece' : 'pieces'}
+          </span>
+        </h2>
+        <div class="grid">
+          {entries.map((entry) => (
+            <WritingCard entry={entry} />
+          ))}
+        </div>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .year {
+    margin-top: 3rem;
+    scroll-margin-top: 1rem;
+  }
+  .year[hidden] {
+    display: none;
+  }
+  .year-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0 0 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .year-count {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--ink-faint);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+    gap: 1.5rem;
+  }
+</style>

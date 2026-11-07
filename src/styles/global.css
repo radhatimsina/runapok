@@ -17,7 +17,8 @@
   --font-deva: 'Noto Serif Devanagari Variable', 'Source Serif 4 Variable', serif;
   --font-ui: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
-  --measure: 38rem;
+  --measure: 44rem;
+  --wide: 76rem;
   color-scheme: light;
 }
 
@@ -63,8 +64,8 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-serif);
-  font-size: 1.125rem;
-  line-height: 1.65;
+  font-size: 1.25rem;
+  line-height: 1.7;
   font-optical-sizing: auto;
   text-rendering: optimizeLegibility;
 }
@@ -93,11 +94,21 @@ img {
   height: auto;
 }
 
-.wrap {
+.wrap,
+.wrap-wide {
   width: 100%;
-  max-width: calc(var(--measure) + 2rem);
+  max-width: calc(var(--measure) + 2.5rem);
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 1.25rem;
+}
+.wrap-wide {
+  max-width: calc(var(--wide) + 2.5rem);
+}
+@media (max-width: 480px) {
+  .wrap,
+  .wrap-wide {
+    padding: 0 1rem;
+  }
 }
 
 .ui {
@@ -118,7 +129,7 @@ img {
 
 .eyebrow {
   font-family: var(--font-ui);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-faint);
@@ -139,7 +150,7 @@ img {
 
 .button {
   font-family: var(--font-ui);
-  font-size: 0.9rem;
+  font-size: 1rem;
   border: 1px solid var(--accent);
   background: var(--accent);
   color: var(--paper);

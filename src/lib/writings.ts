@@ -62,3 +62,8 @@ export function groupByYear(items: Writing[]) {
   }
   return [...groups];
 }
+
+/** Card/share thumbnail: the chosen thumbnail, else the first image in the text. */
+export function thumbnail(entry: Writing) {
+  return entry.data.image || firstImage(entry.body);
+}
