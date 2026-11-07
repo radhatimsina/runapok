@@ -42,7 +42,10 @@ const navItems = [
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="author" content={AUTHOR} />
@@ -76,8 +79,11 @@ const navItems = [
     <header class="site-header">
       <div class="wrap-wide header-inner">
         <a class="brand" href="/">
-          <span class="brand-title">{SITE_TITLE}</span>
-          <span class="brand-author ui">{AUTHOR}</span>
+          <span class="brand-logo" aria-hidden="true"></span>
+          <span class="brand-text">
+            <span class="brand-title">{SITE_TITLE}</span>
+            <span class="brand-author ui">{AUTHOR}</span>
+          </span>
         </a>
         <button class="theme-toggle ui" type="button" aria-label="Switch colour theme" title="Switch colour theme">
           <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"
@@ -160,7 +166,21 @@ const navItems = [
     color: var(--ink);
     text-decoration: none;
     display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+  .brand-text {
+    display: flex;
     flex-direction: column;
+  }
+  /* The logo is used as a mask so it takes the accent colour in light and dark mode. */
+  .brand-logo {
+    width: clamp(2.6rem, 6vw, 3.4rem);
+    aspect-ratio: 1;
+    flex-shrink: 0;
+    background: var(--accent);
+    -webkit-mask: url('/logo.png') center / contain no-repeat;
+    mask: url('/logo.png') center / contain no-repeat;
   }
   .brand-title {
     font-size: clamp(1.8rem, 4vw, 2.3rem);
