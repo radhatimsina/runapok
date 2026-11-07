@@ -29,6 +29,8 @@ const { title, date, category, language, tags, alsoPublishedAt } = entry.data;
 const url = new URL(writingUrl(entry.id), Astro.site).toString();
 const description = excerpt(entry.body, 3).join(' / ');
 const image = thumbnail(entry);
+// A chosen thumbnail is shown as a header picture (pictures inside the text show in place).
+const heroImage = entry.data.image || undefined;
 ---
 
 <Base title={title} description={description} image={image} type="article" publishedTime={date}>
@@ -42,6 +44,8 @@ const image = thumbnail(entry);
         {AUTHOR} · <time datetime={date.toISOString()}>{formatDate(date)}</time>
       </p>
     </header>
+
+    {heroImage && <img class="hero-image" src={heroImage} alt="" width="1280" height="720" />}
 
     <div class:list={['piece-body', category]}>
       <Content />
@@ -119,6 +123,15 @@ const image = thumbnail(entry);
     color: var(--ink-soft);
     font-size: 1rem;
     margin: 0;
+  }
+  .hero-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 10px;
+    margin: 0 0 2.5rem;
   }
   .piece-body {
     font-size: clamp(1.25rem, 2.4vw, 1.4rem);

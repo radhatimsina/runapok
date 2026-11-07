@@ -3,6 +3,7 @@ title: "Death of a Traitor"
 date: 2009-10-02T18:07:45Z
 category: poem
 language: en
+image: "/images/thumbs/death-of-a-traitor.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/10/02/death-of-a-traitor/"
 ---
 

@@ -3,6 +3,7 @@ title: "ON HIS GRAVE…"
 date: 2009-10-12T15:47:31Z
 category: poem
 language: en
+image: "/images/thumbs/on-his-grave.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/10/12/on-his-grave/"
 ---
 

@@ -3,6 +3,7 @@ title: "A DAMSEL IN DISTRESS"
 date: 2009-11-01T04:32:00Z
 category: poem
 language: en
+image: "/images/thumbs/a-damsel-in-distress.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/11/01/a-damsel-in-distress/"
 ---
 

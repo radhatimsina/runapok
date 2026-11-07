@@ -3,6 +3,7 @@ title: "AN ABRUPT ENCOUNTER"
 date: 2009-10-02T15:01:00Z
 category: poem
 language: en
+image: "/images/thumbs/an-abrupt-encounter.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/10/02/an-abrupt-encounter/"
 ---
 

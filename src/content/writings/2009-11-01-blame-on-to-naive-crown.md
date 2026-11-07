@@ -3,6 +3,7 @@ title: "BLAME ON TO NAÏVE CROWN"
 date: 2009-11-01T04:34:30Z
 category: poem
 language: en
+image: "/images/thumbs/blame-on-to-naive-crown.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/11/01/blame-on-to-naive-crown/"
 ---
 

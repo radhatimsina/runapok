@@ -3,6 +3,7 @@ title: "PEARL IN RAMSHACKLE HUT"
 date: 2009-10-30T04:55:34Z
 category: poem
 language: en
+image: "/images/thumbs/pearl-in-ramshackle-hut.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/10/30/pearl-in-ramshackle-hut/"
 ---
 

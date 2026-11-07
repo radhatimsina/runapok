@@ -3,6 +3,7 @@ title: "ABSURD JUSTICE"
 date: 2009-10-20T01:13:33Z
 category: poem
 language: en
+image: "/images/thumbs/absurd-justice.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/10/20/absurd-justice/"
 ---
 

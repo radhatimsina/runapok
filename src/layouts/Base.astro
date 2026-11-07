@@ -110,9 +110,10 @@ const navItems = [
     <footer class="site-footer ui">
       <div class="wrap-wide">
         <p>© {new Date().getFullYear()} {AUTHOR}. All poems and stories are the author’s own.</p>
-        <p>
-          <a href="/rss.xml">RSS feed</a> · <a href="/about/">About</a> ·
-          <a href="https://bhutaneseliterature.com" rel="noopener">Bhutanese Literature</a>
+        <p class="footer-links">
+          <a href="/rss.xml">RSS feed</a><span aria-hidden="true">·</span><a href="/about/">About</a><span
+            aria-hidden="true">·</span><a href="https://bhutaneseliterature.com" rel="noopener">Bhutanese Literature</a><span
+            aria-hidden="true">·</span><a href="/admin/" rel="nofollow">Author login</a>
         </p>
       </div>
     </footer>
@@ -221,5 +222,10 @@ const navItems = [
   }
   .site-footer a {
     color: var(--ink-soft);
+  }
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.6rem;
   }
 </style>

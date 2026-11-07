@@ -3,6 +3,7 @@ title: "TEEN- FRAGRANCE"
 date: 2009-10-20T01:14:57Z
 category: poem
 language: en
+image: "/images/thumbs/teen-fragrance.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/10/20/teen-fragrance/"
 ---
 

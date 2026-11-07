@@ -3,6 +3,7 @@ title: "MY TEACHER"
 date: 2009-10-10T19:31:42Z
 category: poem
 language: en
+image: "/images/thumbs/my-teacher.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/10/10/my-teacher/"
 ---
 
