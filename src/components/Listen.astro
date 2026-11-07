@@ -96,11 +96,16 @@ const { audio, language, title } = Astro.props;
       if (lines.length) lines[lines.length - 1].pauseAfter = 700; // breath between stanzas
     }
 
+    // Voices load asynchronously (Chrome returns [] at first), so ask early and keep the list fresh.
+    let voices: SpeechSynthesisVoice[] = synth.getVoices();
+    synth.addEventListener?.('voiceschanged', () => (voices = synth.getVoices()));
+
+    const normLang = (v: SpeechSynthesisVoice) => v.lang.toLowerCase().replace('_', '-');
     const pickVoice = () => {
-      const voices = synth.getVoices();
+      if (!voices.length) voices = synth.getVoices();
       const wanted = language === 'ne' ? ['ne', 'hi'] : ['en'];
       for (const code of wanted) {
-        const matches = voices.filter((v) => v.lang.toLowerCase().startsWith(code));
+        const matches = voices.filter((v) => normLang(v).startsWith(code));
         if (matches.length) {
           // Prefer the more natural-sounding voices when the device has them.
           return (
@@ -118,6 +123,11 @@ const { audio, language, title } = Astro.props;
     let playing = false;
     let paused = false;
     let timer: number | undefined;
+    let watchdog: number | undefined;
+    let started = false; // has the device actually begun speaking this session?
+    // Chrome can garbage-collect an utterance before its "end" event fires, which
+    // silently stops the reading; keeping a reference prevents that.
+    let current: SpeechSynthesisUtterance | null = null;
 
     const setUi = () => {
       tts.classList.toggle('is-playing', playing && !paused);
@@ -135,16 +145,27 @@ const { audio, language, title } = Astro.props;
       if (r.top < 80 || r.bottom > innerHeight - 80) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
 
-    const stop = () => {
+    const halt = () => {
+      clearTimeout(timer);
+      clearTimeout(watchdog);
+      current = null;
+      if (synth.speaking || synth.pending) synth.cancel();
+    };
+
+    const stop = (message = '') => {
       playing = false;
       paused = false;
-      clearTimeout(timer);
-      synth.cancel();
+      halt();
       highlight(null);
       index = 0;
-      status.textContent = '';
+      status.textContent = message;
       setUi();
     };
+
+    const cannotSpeak = () =>
+      language === 'ne'
+        ? 'This device has no Nepali voice for reading aloud. On Android: Settings → Text-to-speech → Google → install Nepali (or Hindi) voice data.'
+        : 'No sound? Turn the volume up, and on iPhone switch off silent mode. Your browser may also not support reading aloud.';
 
     const speakNext = () => {
       if (!playing || paused) return;
@@ -155,56 +176,75 @@ const { audio, language, title } = Astro.props;
         u.voice = voice;
         u.lang = voice.lang;
       } else {
+        // No matching voice listed: give the device the language and let it choose.
         u.lang = language === 'ne' ? 'ne-NP' : 'en-US';
       }
       u.rate = Number(speedSel.value);
-      u.onstart = () => highlight(index);
+      u.onstart = () => {
+        started = true;
+        clearTimeout(watchdog);
+        highlight(index);
+      };
       u.onend = () => {
-        if (!playing || paused) return;
-        const pause = line.pauseAfter;
+        if (current !== u || !playing || paused) return;
+        clearTimeout(watchdog);
+        // Some engines skip "start"; finishing a line proves speech works.
+        started = true;
+        highlight(null);
         index += 1;
-        timer = window.setTimeout(speakNext, pause);
+        timer = window.setTimeout(speakNext, line.pauseAfter);
       };
       u.onerror = (e) => {
-        if (e.error === 'interrupted' || e.error === 'canceled') return;
-        status.textContent = 'Reading stopped unexpectedly.';
-        stop();
+        if (current !== u || e.error === 'interrupted' || e.error === 'canceled') return;
+        stop(
+          e.error === 'language-unavailable' || e.error === 'voice-unavailable' || e.error === 'synthesis-unavailable'
+            ? cannotSpeak()
+            : 'Reading stopped unexpectedly. Please try again.',
+        );
       };
+      current = u;
+      // If nothing has been heard after a few seconds, the device can't read this
+      // language (or is muted); say so instead of sitting silently.
+      clearTimeout(watchdog);
+      if (!started) watchdog = window.setTimeout(() => current === u && stop(cannotSpeak()), 4000);
+      synth.resume(); // Chrome can get stuck in a paused state
       synth.speak(u);
     };
 
     playBtn.addEventListener('click', () => {
       if (!playing) {
         voice = pickVoice();
-        if (language === 'ne' && !voice) {
-          status.textContent = 'This device has no Nepali or Hindi voice for reading aloud.';
-          return;
-        }
         status.textContent =
-          language === 'ne' && voice && !voice.lang.toLowerCase().startsWith('ne') ? 'Reading with a Hindi voice' : '';
+          language === 'ne' && voice && !normLang(voice).startsWith('ne') ? 'Reading with a Hindi voice' : '';
         playing = true;
         paused = false;
+        started = false;
         index = 0;
-        synth.cancel();
         setUi();
-        speakNext();
+        // Speak straight away (iPhone only allows speech that starts during the tap).
+        // Only reset the engine if something else is still talking, then wait a moment:
+        // Chrome ignores speech started immediately after a reset.
+        if (synth.speaking || synth.pending) {
+          synth.cancel();
+          timer = window.setTimeout(speakNext, 120);
+        } else {
+          speakNext();
+        }
       } else if (paused) {
         paused = false;
         setUi();
-        speakNext(); // restart the current line (more reliable than synth.resume())
+        timer = window.setTimeout(speakNext, 120); // restart the current line
       } else {
         paused = true;
-        clearTimeout(timer);
-        synth.cancel();
+        halt();
         setUi();
       }
     });
-    stopBtn.addEventListener('click', stop);
+    stopBtn.addEventListener('click', () => stop());
     speedSel.addEventListener('change', () => {
       if (playing && !paused) {
-        synth.cancel();
-        clearTimeout(timer);
-        speakNext();
+        halt();
+        timer = window.setTimeout(speakNext, 120);
       }
     });
     addEventListener('pagehide', () => synth.cancel());
@@ -214,7 +254,6 @@ const { audio, language, title } = Astro.props;
       if (lines.length) tts.hidden = false;
     };
     reveal();
-    synth.addEventListener?.('voiceschanged', reveal);
   }
 </script>
 
