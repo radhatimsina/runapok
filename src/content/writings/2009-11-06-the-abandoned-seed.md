@@ -4,6 +4,7 @@ date: 2009-11-06T04:49:55Z
 category: poem
 language: en
 tags: ["nitrogen fixing bacteria","seed"]
+image: "/images/thumbs/the-abandoned-seed.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/11/06/the-abandoned-seed/"
 ---
 

@@ -3,6 +3,7 @@ title: "SELFLESS DRUDGE"
 date: 2009-12-13T22:34:35Z
 category: poem
 language: en
+image: "/images/thumbs/selfless-drudge.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/12/13/selfless-drudge/"
 ---
 

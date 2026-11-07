@@ -3,6 +3,7 @@ title: "OBLIGATION"
 date: 2009-11-19T04:30:43Z
 category: poem
 language: en
+image: "/images/thumbs/obligation.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/11/19/obligation/"
 ---
 
@@ -15,8 +16,6 @@ Jumps with caution and enters his room
 Picks an old chit and reads Nineteen fifty-eight
 And utters, F-1, on any norm or any form.
 Looks at the photo on the wall and states Pa, you’re great.
-
-![](/images/wp/2009/11/images-5.jpg)
 
 He flexes his muscles and says, I aint a beast,
 Coward, suit his name and no term can define.
@@ -37,8 +36,6 @@ She lost her daughter too. She is no more
 Lascivious cadets ruined her puberty
 Poor ma; widowed and ousted while I was four
 Im a right peg in the right hole; must end disparity.
-
-![](/images/wp/2009/11/images-3.jpg)
 
 He stares at the firmament and whispers am I the lonely sufferer?
 And he roves his eyes around and says, No , they too,

@@ -3,6 +3,7 @@ title: "Adieu – June 20th"
 date: 2015-06-22T01:37:14Z
 category: poem
 language: en
+image: "/images/thumbs/adieu-june-20th.jpg"
 legacyUrl: "https://runapok.wordpress.com/2015/06/22/adieu-june-20th/"
 ---
 

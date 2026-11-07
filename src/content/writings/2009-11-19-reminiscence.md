@@ -3,6 +3,7 @@ title: "REMINISCENCE"
 date: 2009-11-19T04:28:16Z
 category: poem
 language: en
+image: "/images/thumbs/reminiscence.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/11/19/reminiscence/"
 ---
 
@@ -24,8 +25,6 @@ All about my whereabouts.
 
 I haven’t died yet,
 Nor the hope is lost
-
-![](/images/wp/2009/11/images-6.jpg)
 
 drying…
 
@@ -53,8 +52,6 @@ When insanity blended-
 My edifying words…
 All dried in vain.
 
-![](/images/wp/2009/11/images-7.jpg)
-
 She was in her sleep
 I peeped her thro hole
 You so snoring.
@@ -70,8 +67,6 @@ Treaded for so long
 all darks…
 Wayside and under woods
 Were my comfy beds.
-
-![](/images/wp/2009/11/images-8.jpg)
 
 Tell in least to her
 A bit of me about

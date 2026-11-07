@@ -3,6 +3,7 @@ title: "HASTENED ROOK"
 date: 2009-11-06T04:51:55Z
 category: poem
 language: en
+image: "/images/thumbs/hastened-rook.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/11/06/hastened-rook/"
 ---
 

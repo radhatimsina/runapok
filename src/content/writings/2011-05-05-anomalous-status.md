@@ -3,10 +3,9 @@ title: "ANOMALOUS STATUS"
 date: 2011-05-05T03:25:28Z
 category: poem
 language: en
+image: "/images/thumbs/anomalous-status.jpg"
 legacyUrl: "https://runapok.wordpress.com/2011/05/05/anomalous-status/"
 ---
-
-![](/images/wp/2011/05/download.jpg)
 
 I am a man as of your stature,
 I do have kids and other half

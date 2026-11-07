@@ -3,6 +3,7 @@ title: "ENIGMATIC TURN"
 date: 2009-12-13T22:29:34Z
 category: poem
 language: en
+image: "/images/thumbs/enigmatic-turn.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/12/13/enigmatic-turn/"
 ---
 

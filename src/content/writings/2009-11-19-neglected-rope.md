@@ -3,6 +3,7 @@ title: "NEGLECTED ROPE"
 date: 2009-11-19T04:34:35Z
 category: poem
 language: en
+image: "/images/thumbs/neglected-rope.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/11/19/neglected-rope/"
 ---
 
@@ -17,8 +18,6 @@ Kids he saw all foes- in eyes,
 Their caring call…
 All annoying and irking.
 
-![](/images/wp/2009/11/images-1.jpg)
-
 He looked towards East,
 Saw no hope.
 He looked towards West,
@@ -27,8 +26,6 @@ He looked towards North,
 Flavored no hope.
 He looked towards South,
 Smelt no hope.
-
-![](/images/wp/2009/11/images-2.jpg)
 
 He saw a neglected rope
 While around the vicinity

@@ -3,6 +3,7 @@ title: "Best Wishes for You"
 date: 2013-07-08T03:01:19Z
 category: poem
 language: en
+image: "/images/thumbs/best-wishes-for-you.jpg"
 legacyUrl: "https://runapok.wordpress.com/2013/07/08/best-wishes-for-you/"
 ---
 

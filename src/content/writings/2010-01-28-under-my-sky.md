@@ -3,6 +3,7 @@ title: "UNDER MY SKY"
 date: 2010-01-28T23:09:39Z
 category: poem
 language: en
+image: "/images/thumbs/under-my-sky.jpg"
 legacyUrl: "https://runapok.wordpress.com/2010/01/28/under-my-sky/"
 ---
 

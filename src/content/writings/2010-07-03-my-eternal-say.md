@@ -3,6 +3,7 @@ title: "MY ETERNAL SAY"
 date: 2010-07-03T04:25:56Z
 category: poem
 language: en
+image: "/images/thumbs/my-eternal-say.jpg"
 legacyUrl: "https://runapok.wordpress.com/2010/07/03/my-eternal-say/"
 ---
 

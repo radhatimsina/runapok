@@ -3,6 +3,7 @@ title: "DEFEATING DOUBLE BIND"
 date: 2009-12-13T22:27:47Z
 category: poem
 language: en
+image: "/images/thumbs/defeating-double-bind.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/12/13/defeating-double-bind/"
 ---
 

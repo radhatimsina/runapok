@@ -4,6 +4,7 @@ date: 2013-07-31T03:02:12Z
 category: poem
 language: en
 alsoPublishedAt: "http://www.bhutaneseliterature.com"
+image: "/images/thumbs/lozenge-for-he.jpg"
 legacyUrl: "https://runapok.wordpress.com/2013/07/31/lozenge-for-he-2/"
 ---
 

@@ -3,6 +3,7 @@ title: "QUEST FOR-the TRUTH"
 date: 2009-12-13T22:31:52Z
 category: poem
 language: en
+image: "/images/thumbs/quest-for-the-truth.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/12/13/quest-for-the-truth/"
 ---
 

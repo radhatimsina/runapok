@@ -3,6 +3,7 @@ title: "THE PURPOSE"
 date: 2010-01-28T23:06:40Z
 category: poem
 language: en
+image: "/images/thumbs/the-purpose.jpg"
 legacyUrl: "https://runapok.wordpress.com/2010/01/28/the-purpose/"
 ---
 

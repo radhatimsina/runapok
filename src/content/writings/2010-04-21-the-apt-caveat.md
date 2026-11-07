@@ -3,6 +3,7 @@ title: "The Apt Caveat"
 date: 2010-04-21T23:18:44Z
 category: poem
 language: en
+image: "/images/thumbs/the-apt-caveat.jpg"
 legacyUrl: "https://runapok.wordpress.com/2010/04/21/the-apt-caveat/"
 ---
 

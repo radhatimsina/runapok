@@ -3,6 +3,7 @@ title: "MORBID ECHOES"
 date: 2010-04-21T23:21:59Z
 category: poem
 language: en
+image: "/images/thumbs/morbid-echoes.jpg"
 legacyUrl: "https://runapok.wordpress.com/2010/04/21/morbid-echoes/"
 ---
 

@@ -3,6 +3,7 @@ title: "WITH AND WITHOUT…"
 date: 2009-12-13T22:33:36Z
 category: poem
 language: en
+image: "/images/thumbs/with-and-without.jpg"
 legacyUrl: "https://runapok.wordpress.com/2009/12/13/with-and-without%e2%80%a6/"
 ---
 
@@ -10,8 +11,6 @@ Drank… drank and you drank
 Thirst of it nearly drank you to whole
 Had all been gathered, would fill a tank
 For years you took it for granted, life’s goal.
-
-![](/images/wp/2009/12/images-21.jpg)
 
 Began with cock-a-doodle-doo till where’s my nest-
 You dived in; you lost with and got bliss in the mug
@@ -32,8 +31,6 @@ You are to use the gotten fate with caution and trust
 For all alone the ball is rolling in your court
 The devilish fluid may again entice you for unseen lust
 Build up within you the esteem to rescind you to comfort.
-
-![](/images/wp/2009/12/images-20.jpg)
 
 The lines on the walls, if not read true to their meaning
 And the road in front is not taken to its true destination

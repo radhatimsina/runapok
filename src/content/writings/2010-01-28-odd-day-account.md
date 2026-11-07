@@ -3,6 +3,7 @@ title: "ODD DAY ACCOUNT"
 date: 2010-01-28T23:12:30Z
 category: poem
 language: en
+image: "/images/thumbs/odd-day-account.jpg"
 legacyUrl: "https://runapok.wordpress.com/2010/01/28/odd-day-account/"
 ---
 
@@ -15,8 +16,6 @@ The scene of the setting was normal
 No feast; no gala, nor soiree’s aroma in ether
 I was to add a new page to make it twentieth thereafter
 The budding spring in the adjacent was the optimal.
-
-![](/images/wp/2010/01/images-11.jpg)
 
 Genuine musings of the first day
 Brought in my nerve the scene of the last see
