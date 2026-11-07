@@ -37,16 +37,11 @@ Poems and stories by **Rup Pokharel**, moved from the old WordPress blog
 
 1. In the Vercel project, go to **Storage → Create Database → Neon (Postgres)**
    and connect it to the project. Vercel adds `DATABASE_URL` for you.
-2. Create the table and load the 30 old comments, either from your computer:
-   ```bash
-   npx vercel env pull .env.local
-   ```
-   ```bash
-   node --env-file=.env.local scripts/db-setup.mjs
-   ```
-   or, without a computer setup, paste `db/schema.sql` and then
-   `db/legacy-comments.sql` into the Neon SQL editor and run them. Both are
-   safe to run more than once.
+2. Redeploy. Every build creates the comments table if needed and loads the
+   30 old WordPress comments that aren't there yet (`scripts/db-setup.mjs`).
+   It is safe to repeat, and a database problem never stops the deploy.
+   To do it by hand instead, paste `db/schema.sql` and then
+   `db/legacy-comments.sql` into the Neon SQL editor.
 
 ### 3. Sign-in for the writing desk (Decap CMS)
 

@@ -6,7 +6,7 @@
   "description": "Live and Let Live — poems and stories by Rup Pokharel",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/db-setup.mjs --optional && astro build",
     "preview": "astro preview",
     "db:setup": "node scripts/db-setup.mjs",
     "import:wordpress": "node scripts/import-wordpress.mjs"
