@@ -1,10 +1,10 @@
 ---
-title: "Colors in Happiness"
-date: 2016-03-21T20:37:46Z
+title: Colors in Happiness
+date: 2016-03-21T20:37:46.000Z
 category: poem
 language: en
-alsoPublishedAt: "http://bhutaneseliterature.com/archives/16657"
-legacyUrl: "https://runapok.wordpress.com/2016/03/21/colors-in-happiness/"
+alsoPublishedAt: https://bhutaneseliterature.com/colors-in-happiness/
+legacyUrl: https://runapok.wordpress.com/2016/03/21/colors-in-happiness/
 ---
 
 Cloud, puzzling object, ain’t a permanent wall to block the sun
