@@ -16,6 +16,7 @@ const writings = defineCollection({
     language: z.enum(['en', 'ne']).default('en'),
     tags: z.array(z.string()).default([]),
     image: z.string().optional().or(z.literal('')),
+    audio: z.string().optional().or(z.literal('')),
     alsoPublishedAt: z.string().url().optional().or(z.literal('')),
     legacyUrl: z.string().url().optional(),
     draft: z.boolean().default(false),

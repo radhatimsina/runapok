@@ -93,6 +93,18 @@ Tick **Draft** to save a piece without showing it on the site.
 A few names are taken by the site itself and can't be used for pages:
 admin, api, category, language, images, feed, tag, author and plain years like 2016.
 
+## Listening to a poem
+
+Every poem and story has a **Listen** button.
+
+- **Author's recording:** in `/admin/`, open the piece and upload an MP3 in
+  **Audio recording** (under 10 MB). The page then plays that recording.
+- **Read aloud automatically:** without a recording, the visitor's own device
+  reads the text, highlighting each line. It's free and nothing is sent to a
+  server. Voice quality depends on the device. Nepali pieces use a Nepali voice
+  if the device has one, otherwise a Hindi voice; if neither is installed the
+  button says so.
+
 ## Comments
 
 - Visitors only need a name. Email is not collected.

@@ -1,0 +1,309 @@
+---
+/**
+ * "Listen" player for a poem or story.
+ * - If the author uploaded a recording (audio field), it plays that.
+ * - Otherwise the browser reads the text aloud (Web Speech API), line by line,
+ *   highlighting the line being read. Nothing is sent to any server.
+ */
+interface Props {
+  audio?: string;
+  language: 'en' | 'ne';
+  title: string;
+}
+const { audio, language, title } = Astro.props;
+---
+
+<div class="listen ui" data-language={language} data-title={title} lang="en">
+  {
+    audio ? (
+      <div class="recording">
+        <span class="label">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path fill="currentColor" d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z" />
+          </svg>
+          Listen to the author read it
+        </span>
+        <audio controls preload="none" src={audio}>
+          <a href={audio}>Download the recording</a>
+        </audio>
+      </div>
+    ) : (
+      <div class="tts" hidden>
+        <button type="button" class="play" aria-label="Listen to this piece">
+          <svg class="icon-play" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path fill="currentColor" d="M8 5v14l11-7z" />
+          </svg>
+          <svg class="icon-pause" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path fill="currentColor" d="M6 5h4v14H6zM14 5h4v14h-4z" />
+          </svg>
+          <span class="play-label">Listen</span>
+        </button>
+        <button type="button" class="stop" aria-label="Stop reading" hidden>
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+            <path fill="currentColor" d="M6 6h12v12H6z" />
+          </svg>
+        </button>
+        <label class="speed">
+          <span class="visually-hidden">Reading speed</span>
+          <select>
+            <option value="0.75">0.75×</option>
+            <option value="0.9" selected>Slow</option>
+            <option value="1">Normal</option>
+            <option value="1.2">Fast</option>
+          </select>
+        </label>
+        <span class="status" role="status"></span>
+      </div>
+    )
+  }
+</div>
+
+<script>
+  const box = document.querySelector<HTMLElement>('.listen');
+  const tts = box?.querySelector<HTMLElement>('.tts');
+  const body = document.querySelector<HTMLElement>('.piece-body');
+
+  if (box && tts && body && 'speechSynthesis' in window) {
+    const synth = window.speechSynthesis;
+    const language = box.dataset.language as 'en' | 'ne';
+    const playBtn = tts.querySelector<HTMLButtonElement>('.play')!;
+    const playLabel = tts.querySelector<HTMLElement>('.play-label')!;
+    const stopBtn = tts.querySelector<HTMLButtonElement>('.stop')!;
+    const speedSel = tts.querySelector<HTMLSelectElement>('select')!;
+    const status = tts.querySelector<HTMLElement>('.status')!;
+
+    // Split every paragraph into one span per line (lines are separated by <br>).
+    type Line = { el: HTMLElement; text: string; pauseAfter: number };
+    const lines: Line[] = [];
+    const paragraphs = [...body.querySelectorAll<HTMLElement>(':scope > p, :scope > blockquote p, :scope > ul li, :scope > ol li, :scope > h2, :scope > h3')];
+    for (const p of paragraphs) {
+      if (p.querySelector('img') && !p.textContent?.trim()) continue;
+      const groups: Node[][] = [[]];
+      for (const node of [...p.childNodes]) {
+        if (node.nodeName === 'BR') groups.push([]);
+        else groups[groups.length - 1].push(node);
+      }
+      p.replaceChildren();
+      groups.forEach((nodes, i) => {
+        const span = document.createElement('span');
+        span.className = 'tts-line';
+        span.append(...nodes);
+        p.append(span);
+        if (i < groups.length - 1) p.append(document.createElement('br'));
+        const text = span.textContent?.replace(/\s+/g, ' ').trim() ?? '';
+        if (text) lines.push({ el: span, text, pauseAfter: 0 });
+      });
+      if (lines.length) lines[lines.length - 1].pauseAfter = 700; // breath between stanzas
+    }
+
+    const pickVoice = () => {
+      const voices = synth.getVoices();
+      const wanted = language === 'ne' ? ['ne', 'hi'] : ['en'];
+      for (const code of wanted) {
+        const matches = voices.filter((v) => v.lang.toLowerCase().startsWith(code));
+        if (matches.length) {
+          // Prefer the more natural-sounding voices when the device has them.
+          return (
+            matches.find((v) => /natural|neural|enhanced|premium|google/i.test(v.name)) ??
+            matches.find((v) => v.localService) ??
+            matches[0]
+          );
+        }
+      }
+      return undefined;
+    };
+
+    let voice: SpeechSynthesisVoice | undefined;
+    let index = 0;
+    let playing = false;
+    let paused = false;
+    let timer: number | undefined;
+
+    const setUi = () => {
+      tts.classList.toggle('is-playing', playing && !paused);
+      playLabel.textContent = playing ? (paused ? 'Resume' : 'Pause') : 'Listen';
+      playBtn.setAttribute('aria-label', playing && !paused ? 'Pause reading' : 'Listen to this piece');
+      stopBtn.hidden = !playing;
+    };
+
+    const highlight = (i: number | null) => {
+      for (const l of lines) l.el.classList.remove('is-reading');
+      if (i === null) return;
+      const el = lines[i].el;
+      el.classList.add('is-reading');
+      const r = el.getBoundingClientRect();
+      if (r.top < 80 || r.bottom > innerHeight - 80) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    const stop = () => {
+      playing = false;
+      paused = false;
+      clearTimeout(timer);
+      synth.cancel();
+      highlight(null);
+      index = 0;
+      status.textContent = '';
+      setUi();
+    };
+
+    const speakNext = () => {
+      if (!playing || paused) return;
+      if (index >= lines.length) return stop();
+      const line = lines[index];
+      const u = new SpeechSynthesisUtterance(line.text);
+      if (voice) {
+        u.voice = voice;
+        u.lang = voice.lang;
+      } else {
+        u.lang = language === 'ne' ? 'ne-NP' : 'en-US';
+      }
+      u.rate = Number(speedSel.value);
+      u.onstart = () => highlight(index);
+      u.onend = () => {
+        if (!playing || paused) return;
+        const pause = line.pauseAfter;
+        index += 1;
+        timer = window.setTimeout(speakNext, pause);
+      };
+      u.onerror = (e) => {
+        if (e.error === 'interrupted' || e.error === 'canceled') return;
+        status.textContent = 'Reading stopped unexpectedly.';
+        stop();
+      };
+      synth.speak(u);
+    };
+
+    playBtn.addEventListener('click', () => {
+      if (!playing) {
+        voice = pickVoice();
+        if (language === 'ne' && !voice) {
+          status.textContent = 'This device has no Nepali or Hindi voice for reading aloud.';
+          return;
+        }
+        status.textContent =
+          language === 'ne' && voice && !voice.lang.toLowerCase().startsWith('ne') ? 'Reading with a Hindi voice' : '';
+        playing = true;
+        paused = false;
+        index = 0;
+        synth.cancel();
+        setUi();
+        speakNext();
+      } else if (paused) {
+        paused = false;
+        setUi();
+        speakNext(); // restart the current line (more reliable than synth.resume())
+      } else {
+        paused = true;
+        clearTimeout(timer);
+        synth.cancel();
+        setUi();
+      }
+    });
+    stopBtn.addEventListener('click', stop);
+    speedSel.addEventListener('change', () => {
+      if (playing && !paused) {
+        synth.cancel();
+        clearTimeout(timer);
+        speakNext();
+      }
+    });
+    addEventListener('pagehide', () => synth.cancel());
+
+    // Voices load asynchronously in some browsers; show the player once we know.
+    const reveal = () => {
+      if (lines.length) tts.hidden = false;
+    };
+    reveal();
+    synth.addEventListener?.('voiceschanged', reveal);
+  }
+</script>
+
+<style>
+  .listen {
+    margin: 0 0 2rem;
+  }
+  .tts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .tts[hidden] {
+    display: none;
+  }
+  button,
+  select {
+    font: inherit;
+    font-size: 0.95rem;
+    color: var(--ink);
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .play {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.1rem 0.5rem 0.85rem;
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--paper);
+  }
+  .play:hover {
+    filter: brightness(1.08);
+  }
+  .icon-pause,
+  .is-playing .icon-play {
+    display: none;
+  }
+  .is-playing .icon-pause {
+    display: block;
+  }
+  .stop {
+    display: inline-grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    color: var(--ink-soft);
+  }
+  .stop[hidden] {
+    display: none;
+  }
+  select {
+    padding: 0.45rem 0.8rem;
+    color: var(--ink-soft);
+  }
+  .status {
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+  }
+  .recording {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.9rem 1rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+  }
+  .recording .label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  audio {
+    width: 100%;
+  }
+  :global(.tts-line) {
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+  }
+  :global(.tts-line.is-reading) {
+    background: var(--accent-soft);
+    box-shadow: 0 0 0 0.15em var(--accent-soft);
+  }
+</style>

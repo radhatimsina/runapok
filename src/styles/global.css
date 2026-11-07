@@ -93,6 +93,11 @@ img {
   max-width: 100%;
   height: auto;
 }
+/* Empty picture placeholders ("![]()") from the editor shouldn't show as broken images. */
+img[src=''],
+img:not([src]) {
+  display: none;
+}
 
 .wrap,
 .wrap-wide {

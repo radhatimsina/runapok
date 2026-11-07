@@ -71,6 +71,15 @@ collections:
         hint: >-
           Optional. Shown on the home page card and when the poem is shared. If left empty,
           the first picture in the text is used, or a card with the poem's first line.
+      - label: Audio recording
+        name: audio
+        widget: file
+        required: false
+        media_folder: /public/audio
+        public_folder: /audio
+        hint: >-
+          Optional. An MP3 of the author reading this piece (keep it under 10 MB). Without one,
+          visitors can still press Listen and their device reads the text aloud.
       - label: Text
         name: body
         widget: markdown
