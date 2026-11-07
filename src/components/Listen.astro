@@ -180,6 +180,7 @@ const { audio, language, title } = Astro.props;
         u.lang = language === 'ne' ? 'ne-NP' : 'en-US';
       }
       u.rate = Number(speedSel.value);
+      u.volume = 1; // the maximum browsers allow for read-aloud
       u.onstart = () => {
         started = true;
         clearTimeout(watchdog);
