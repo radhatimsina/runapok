@@ -1,8 +1,9 @@
 ---
-title: "About Me"
+title: About Me
 ---
 
-![](/images/wp/2009/10/photo-3.png)
+
+![Rup Pokharel](/images/wp/2009/10/photo-3.png)
 
 This is simply like a  diary of a simple person like you all, where I compile some of my poetry works and make you pass your gratis hours if it interests you.
 
