@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 import remarkBreaks from 'remark-breaks';
 
 // Set SITE_URL in Vercel if you add a custom domain later.
-const site = process.env.SITE_URL ?? 'https://runapok.vercel.app';
+const site = process.env.SITE_URL ?? 'https://rupcreations.com';
 
 /**
  * Old WordPress addresses that are not individual posts. Post addresses

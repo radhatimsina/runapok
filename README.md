@@ -29,7 +29,7 @@ Poems and stories by **Rup Pokharel**, moved from the old WordPress blog
 
 1. In Vercel, choose **Add New → Project** and import `radhatimsina/runapok`.
    Vercel detects Astro, so you don't need to change any settings.
-2. Deploy. The site will be at `https://runapok.vercel.app`, or at a similar
+2. Deploy. The site is at `https://rupcreations.com` (also reachable at its `.vercel.app` address), or at a similar
    address if that one is taken. If the address differs, set `SITE_URL` (step 4)
    and update `site_url` in `public/admin/config.yml`.
 
@@ -50,8 +50,8 @@ needs a GitHub account with write access to it (repository **Settings →
 Collaborators**).
 
 1. On GitHub, go to **Settings → Developer settings → OAuth Apps → New OAuth App**:
-   - Homepage URL: `https://runapok.vercel.app`
-   - Authorization callback URL: `https://runapok.vercel.app/api/callback/`
+   - Homepage URL: `https://rupcreations.com`
+   - Authorization callback URL: `https://rupcreations.com/api/callback/`
 2. Copy the **Client ID**, then generate a **Client secret**.
 
 ### 4. Environment variables (Vercel → Settings → Environment Variables)
@@ -64,13 +64,13 @@ Collaborators**).
 | `AUTHOR_PASSCODE` | Any long phrase. The author enters it under "Are you the author?" so their replies show an **Author** badge |
 | `COMMENT_SALT` | Optional: any random text |
 | `COMMENTS_REQUIRE_APPROVAL` | Optional: `true` holds every new comment until you approve it |
-| `SITE_URL` | Only if the site's address isn't `https://runapok.vercel.app` |
+| `SITE_URL` | Only if the site's address isn't `https://rupcreations.com` |
 
 Redeploy after adding them.
 
 ## Publishing a new poem
 
-1. Go to `https://runapok.vercel.app/admin/` and sign in with GitHub.
+1. Go to `https://rupcreations.com/admin/` and sign in with GitHub.
 2. Under **Poems & Stories**, choose **New Poem or story**.
 3. Fill in the title, type (poem or story), language (English or नेपाली) and the text.
    Type each line on its own line and leave an empty line between stanzas.

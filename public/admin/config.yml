@@ -12,8 +12,8 @@ backend:
     uploadMedia: 'Upload “{{path}}”'
     deleteMedia: 'Delete “{{path}}”'
 
-site_url: https://runapok.vercel.app
-display_url: https://runapok.vercel.app
+site_url: https://rupcreations.com
+display_url: https://rupcreations.com
 locale: en
 
 media_folder: public/images/uploads
