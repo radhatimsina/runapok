@@ -4,7 +4,7 @@ import path from 'node:path';
 
 export type Writing = CollectionEntry<'writings'>;
 
-export const SITE_TITLE = 'Live and Let Live';
+export const SITE_TITLE = 'Rup Creations';
 export const SITE_TAGLINE = 'Storm and problem do not last long, but, may cause damage.';
 export const AUTHOR = 'Rup Pokharel';
 

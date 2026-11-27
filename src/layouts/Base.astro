@@ -84,7 +84,7 @@ const navItems = [
     <header class="site-header">
       <div class="wrap-wide header-inner">
         <a class="brand" href="/">
-          <span class="brand-logo" aria-hidden="true"></span>
+          <img class="brand-logo" src="/logo.png" alt="" width="512" height="512" />
           <span class="brand-text">
             <span class="brand-title">{SITE_TITLE}</span>
             <span class="brand-author ui">{AUTHOR}</span>
@@ -178,14 +178,12 @@ const navItems = [
     display: flex;
     flex-direction: column;
   }
-  /* The logo is used as a mask so it takes the accent colour in light and dark mode. */
   .brand-logo {
-    width: clamp(2.6rem, 6vw, 3.4rem);
-    aspect-ratio: 1;
+    width: clamp(3rem, 6.5vw, 3.8rem);
+    height: auto;
     flex-shrink: 0;
-    background: var(--accent);
-    -webkit-mask: url('/logo.png') center / contain no-repeat;
-    mask: url('/logo.png') center / contain no-repeat;
+    border-radius: 22%;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.12);
   }
   .brand-title {
     font-size: clamp(1.8rem, 4vw, 2.3rem);

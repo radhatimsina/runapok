@@ -1,4 +1,4 @@
-# Live and Let Live
+# Rup Creations
 
 Poems and stories by **Rup Pokharel**, moved from the old WordPress blog
 (runapok.wordpress.com) to a fast, low-maintenance site.

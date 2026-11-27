@@ -74,8 +74,8 @@
     primary: {
       padding: '8px 14px',
       borderRadius: '6px',
-      border: '1px solid #9a3b26',
-      background: '#9a3b26',
+      border: '1px solid #741630',
+      background: '#741630',
       color: '#fff',
       cursor: 'pointer',
       fontSize: '14px',
@@ -99,12 +99,12 @@
     card: { background: '#fff', border: '1px solid #e6dfd5', borderRadius: '8px', overflow: 'hidden', display: 'flex', flexDirection: 'column' },
     thumb: { width: '100%', aspectRatio: '16 / 10', objectFit: 'cover', display: 'block', background: '#eee' },
     meta: { padding: '6px 8px', fontSize: '11px', color: '#5f574f', lineHeight: 1.35, flex: 1 },
-    use: { margin: '0 8px 8px', padding: '6px', borderRadius: '6px', border: '1px solid #9a3b26', background: '#fff', color: '#9a3b26', cursor: 'pointer', fontSize: '13px', fontWeight: 600 },
+    use: { margin: '0 8px 8px', padding: '6px', borderRadius: '6px', border: '1px solid #741630', background: '#fff', color: '#741630', cursor: 'pointer', fontSize: '13px', fontWeight: 600 },
     chip: { padding: '4px 10px', borderRadius: '999px', border: '1px solid #c9c0b5', background: '#fff', cursor: 'pointer', fontSize: '12px' },
     input: { flex: '1 1 200px', padding: '8px 10px', borderRadius: '6px', border: '1px solid #c9c0b5', fontSize: '14px' },
     textarea: { width: '100%', minHeight: '70px', padding: '8px 10px', borderRadius: '6px', border: '1px solid #c9c0b5', fontSize: '14px', fontFamily: 'inherit', boxSizing: 'border-box' },
     note: { fontSize: '12px', color: '#8a8178' },
-    error: { fontSize: '13px', color: '#9a3b26', fontWeight: 600 },
+    error: { fontSize: '13px', color: '#741630', fontWeight: 600 },
   };
 
   var PictureControl = createClass({

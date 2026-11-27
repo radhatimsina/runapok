@@ -9,9 +9,10 @@
   --ink-soft: #5f574f;
   --ink-faint: #8a8178;
   --rule: #e6dfd5;
-  --accent: #9a3b26;
-  --accent-soft: #f3e4dc;
-  --focus: #c2552f;
+  --accent: #741630;
+  --accent-soft: #f5e4e8;
+  --gold: #c9a063;
+  --focus: #a3213f;
 
   --font-serif: 'Source Serif 4 Variable', 'Noto Serif Devanagari Variable', Georgia, serif;
   --font-deva: 'Noto Serif Devanagari Variable', 'Source Serif 4 Variable', serif;
@@ -30,9 +31,10 @@
     --ink-soft: #b5aca1;
     --ink-faint: #8a8178;
     --rule: #34302b;
-    --accent: #e39a7e;
-    --accent-soft: #3a2a23;
-    --focus: #e8a084;
+    --accent: #d9b27a;
+    --accent-soft: #3b2a22;
+    --gold: #d9b27a;
+    --focus: #e3c08b;
     color-scheme: dark;
   }
 }
@@ -43,9 +45,10 @@
   --ink-soft: #b5aca1;
   --ink-faint: #8a8178;
   --rule: #34302b;
-  --accent: #e39a7e;
-  --accent-soft: #3a2a23;
-  --focus: #e8a084;
+  --accent: #d9b27a;
+  --accent-soft: #3b2a22;
+  --gold: #d9b27a;
+  --focus: #e3c08b;
   color-scheme: dark;
 }
 
