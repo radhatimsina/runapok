@@ -138,6 +138,19 @@ Optional overrides: `AI_TEXT_MODEL` (default `anthropic/claude-haiku-5.5`) and
 `AI_IMAGE_MODEL` (default `bfl/flux-3-image-klein`), any IDs from
 https://ai-gateway.vercel.sh/v1/models.
 
+## If a published poem doesn't appear
+
+Vercel's free plan only auto-deploys commits from GitHub accounts linked to the Vercel
+account. Poems published from `/admin/` are committed by the author's GitHub account, so
+either:
+
+1. **Link that GitHub account to Vercel** (Vercel → Account Settings → Authentication →
+   connect GitHub, signed in as the author's GitHub account), or
+2. **Set up the deploy hook fallback:** Vercel → Project → Settings → Git → Deploy Hooks →
+   create a hook for `main`, then add its URL in GitHub → Settings → Secrets and variables →
+   Actions as `VERCEL_DEPLOY_HOOK`. The workflow `.github/workflows/deploy-on-publish.yml`
+   then triggers a deploy after every publish.
+
 ## Comments
 
 - Visitors only need a name. Email is not collected.

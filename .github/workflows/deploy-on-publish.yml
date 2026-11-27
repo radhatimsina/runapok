@@ -1,0 +1,35 @@
+# Makes sure posts published from the writing desk (/admin/) go live.
+#
+# Vercel's free plan blocks automatic deploys of commits whose author's GitHub
+# account isn't linked to the Vercel account. This workflow asks Vercel to deploy
+# through a Deploy Hook instead, which isn't subject to that check.
+#
+# Setup: Vercel → Project → Settings → Git → Deploy Hooks → create one for branch
+# "main", then add its URL in GitHub → Settings → Secrets and variables → Actions
+# as a secret named VERCEL_DEPLOY_HOOK. Without the secret this workflow does nothing.
+name: Deploy on publish
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: vercel-deploy-hook
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Commits by Claude already deploy normally; skip them to avoid a double build.
+    if: ${{ github.event.head_commit.author.email != 'noreply@anthropic.com' }}
+    steps:
+      - name: Trigger Vercel deploy
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::warning::VERCEL_DEPLOY_HOOK is not set; see the comment at the top of this file."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK" > /dev/null
+          echo "Vercel deploy requested."
