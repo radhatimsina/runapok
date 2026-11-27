@@ -22,8 +22,7 @@ const filters = [
       <p class="eyebrow">Poems &amp; stories · English and <span lang="ne">नेपाली</span> · since 2009</p>
       <h1 class="tagline">“{SITE_TAGLINE}”</h1>
       <p class="byline">
-        A diary of verse by <a href="/about/">{AUTHOR}</a> — on memory, home, displacement, freedom and the
-        pursuit of happiness.
+        A diary of verse by <a href="/about/">{AUTHOR}</a> — on memory, home, displacement, freedom and the pursuit of happiness.
       </p>
     </section>
 
@@ -75,10 +74,9 @@ const filters = [
 <style>
   .hero {
     padding: 1.5rem 0 3rem;
-    max-width: 52rem;
   }
   .tagline {
-    font-size: clamp(2.1rem, 5.5vw, 3.6rem);
+    font-size: clamp(1.9rem, 5.5vw, 2.6rem);
     font-style: italic;
     font-weight: 500;
     line-height: 1.15;
@@ -86,10 +84,20 @@ const filters = [
     margin: 0.75rem 0 1.25rem;
   }
   .byline {
-    font-size: clamp(1.15rem, 2.2vw, 1.35rem);
+    font-size: clamp(1.1rem, 2.2vw, 1.2rem);
     color: var(--ink-soft);
     margin: 0;
-    max-width: 40rem;
+  }
+  /* On wide screens each sentence sits on one line; phones let them wrap. */
+  @media (min-width: 1000px) {
+    .tagline {
+      font-size: min(2.6rem, 3.3vw);
+      white-space: nowrap;
+    }
+    .byline {
+      font-size: min(1.2rem, 1.55vw);
+      white-space: nowrap;
+    }
   }
   .section-label {
     font-size: 0.85rem;
