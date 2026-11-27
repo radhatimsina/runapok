@@ -1,4 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { existsSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 
 export type Writing = CollectionEntry<'writings'>;
 
@@ -94,4 +96,26 @@ export async function getMenuPages() {
   return (await getPages())
     .filter((p) => p.data.showInMenu)
     .sort((a, b) => a.data.menuOrder - b.data.menuOrder || a.data.title.localeCompare(b.data.title));
+}
+
+export type ImageCredit = {
+  credit: string;
+  creditUrl?: string;
+  source?: string;
+  license?: string;
+  licenseUrl?: string;
+  pageUrl?: string;
+};
+
+/** Credit saved next to a picture by the writing desk (e.g. /images/uploads/x.json). */
+export function imageCredit(image: string | undefined): ImageCredit | undefined {
+  if (!image || !image.startsWith('/images/')) return undefined;
+  const file = path.join(process.cwd(), 'public', image.replace(/\.[a-z0-9]+$/i, '.json'));
+  if (!existsSync(file)) return undefined;
+  try {
+    const data = JSON.parse(readFileSync(file, 'utf8'));
+    return data?.credit ? data : undefined;
+  } catch {
+    return undefined;
+  }
 }

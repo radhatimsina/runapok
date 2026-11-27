@@ -1,0 +1,65 @@
+---
+import { imageCredit } from '../lib/writings';
+
+interface Props {
+  image?: string;
+}
+const credit = imageCredit(Astro.props.image);
+---
+
+{
+  credit && (
+    <p class="picture-credit ui" lang="en">
+      {credit.source === 'AI' ? (
+        <>Illustration: AI-generated</>
+      ) : (
+        <>
+          Photo:{' '}
+          {credit.creditUrl ? (
+            <a href={credit.creditUrl} rel="noopener nofollow">
+              {credit.credit}
+            </a>
+          ) : (
+            credit.credit
+          )}
+          {credit.source && (
+            <>
+              {' / '}
+              {credit.pageUrl ? (
+                <a href={credit.pageUrl} rel="noopener nofollow">
+                  {credit.source}
+                </a>
+              ) : (
+                credit.source
+              )}
+            </>
+          )}
+          {credit.license && (
+            <>
+              {' · '}
+              {credit.licenseUrl ? (
+                <a href={credit.licenseUrl} rel="noopener nofollow license">
+                  {credit.license}
+                </a>
+              ) : (
+                credit.license
+              )}
+            </>
+          )}
+        </>
+      )}
+    </p>
+  )
+}
+
+<style>
+  .picture-credit {
+    margin: -1.75rem 0 2rem;
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    text-align: right;
+  }
+  .picture-credit a {
+    color: inherit;
+  }
+</style>

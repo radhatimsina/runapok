@@ -2,6 +2,7 @@
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Comments from '../components/Comments.astro';
+import PictureCredit from '../components/PictureCredit.astro';
 import { getPages, excerpt } from '../lib/writings';
 
 // Every file in src/content/pages becomes a page: about.md -> /about/, books.md -> /books/
@@ -19,6 +20,7 @@ const lang = /[ऀ-ॿ]/.test(title + (page.body ?? '')) ? 'ne' : 'en';
   <article class="wrap">
     <h1 lang={lang}>{title}</h1>
     {image && <img class="hero-image" src={image} alt="" />}
+    <PictureCredit image={image || undefined} />
     <div class="page-body" lang={lang}>
       <Content />
     </div>

@@ -105,6 +105,39 @@ Every poem and story has a **Listen** button.
   if the device has one, otherwise a Hindi voice; if neither is installed the
   button says so.
 
+## Picture finder in the writing desk
+
+The **Picture** field (poems and pages) has a **✨ Suggest pictures** button:
+
+- **Free photos:** AI reads the poem (English or Nepali), suggests search words, and
+  searches Pexels, Pixabay and Openverse (Wikimedia Commons, Flickr Creative Commons,
+  museums). Only licences that allow reuse are shown. "Use this" crops the photo to
+  1280×720, saves it to `public/images/uploads/` and credits the photographer under the
+  picture on the site.
+- **Create with AI:** makes 2 painterly pictures from a description (about 1¢ each).
+- **Upload my own** works as before.
+
+Only people signed in to the writing desk with write access to the GitHub repo can use it.
+
+### Setup (Vercel → Settings → Environment Variables)
+
+| Name | Needed for | Where to get it |
+| --- | --- | --- |
+| `PEXELS_API_KEY` | Pexels photos | Free: pexels.com/api |
+| `PIXABAY_API_KEY` | Pixabay photos | Free: pixabay.com/api/docs (sign in, key shown on the page) |
+| `OPENVERSE_CLIENT_ID`, `OPENVERSE_CLIENT_SECRET` | Optional: higher Openverse limits | Free; works without them at a lower rate |
+| `AI_MONTHLY_BUDGET_CENTS` | Optional: AI spending cap (default `100` = $1/month) | |
+
+AI (search ideas and created pictures) uses **Vercel AI Gateway**. Turn it on in the
+Vercel dashboard (AI Gateway tab); on Vercel it signs in automatically. The site keeps
+its own running total in the database and stops AI use once the monthly cap is reached;
+setting the same $1 budget in AI Gateway adds a second safety net. Without AI Gateway,
+photo search still works using the poem's title.
+
+Optional overrides: `AI_TEXT_MODEL` (default `anthropic/claude-haiku-5.5`) and
+`AI_IMAGE_MODEL` (default `bfl/flux-3-image-klein`), any IDs from
+https://ai-gateway.vercel.sh/v1/models.
+
 ## Comments
 
 - Visitors only need a name. Email is not collected.

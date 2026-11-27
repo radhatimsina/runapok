@@ -64,13 +64,13 @@ collections:
         options:
           - { label: English, value: en }
           - { label: Nepali (नेपाली), value: ne }
-      - label: Thumbnail image
+      - label: Picture
         name: image
-        widget: image
+        widget: picture
         required: false
         hint: >-
-          Optional. Shown on the home page card and when the poem is shared. If left empty,
-          the first picture in the text is used, or a card with the poem's first line.
+          Shown on the home page card, at the top of the poem and when it is shared. Use
+          "Suggest pictures" to find a free photo or create one with AI, or upload your own.
       - label: Audio recording
         name: audio
         widget: file
@@ -136,7 +136,7 @@ collections:
         required: false
       - label: Header picture
         name: image
-        widget: image
+        widget: picture
         required: false
       - label: Short description
         name: description

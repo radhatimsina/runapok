@@ -4,6 +4,7 @@ import Base from '../../../../layouts/Base.astro';
 import Share from '../../../../components/Share.astro';
 import Comments from '../../../../components/Comments.astro';
 import Listen from '../../../../components/Listen.astro';
+import PictureCredit from '../../../../components/PictureCredit.astro';
 import {
   getWritings,
   urlParts,
@@ -47,6 +48,7 @@ const heroImage = entry.data.image || undefined;
     </header>
 
     {heroImage && <img class="hero-image" src={heroImage} alt="" width="1280" height="720" />}
+    <PictureCredit image={heroImage} />
 
     <Listen audio={entry.data.audio || undefined} language={language} title={title} />
 
